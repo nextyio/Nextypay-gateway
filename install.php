@@ -34,7 +34,8 @@ $_updatedb->set_includes($_blockchain,$_functions);
 //$_updatedb->init_blocks_table_db(3780307);
 //$_updatedb->init_blocks_table_db(7158740);
 //$_updatedb->init_blocks_table_db(7168740);
-$_updatedb->init_blocks_table_db(7164330);
+//$_updatedb->init_blocks_table_db(7164330);
+$_updatedb->init_blocks_table_db(0);
 //TESTING
 
 //Add merchant

@@ -312,7 +312,7 @@ class Nextypayupdatedb{
 
     public function updatedb(){
         //$this->init_blocks_table_db();
-
+        echo "last Block loaded : ". $this->getMaxBlock() . "<br>";
         $total=$this->_blocks_loaded_each_request;
         //scan from this block number
         $from = $this->getMaxBlock() + 1;
