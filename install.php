@@ -8,9 +8,9 @@ require_once('lib/nextypayupdatedb.php');
 require_once('lib/nextypaysetup.php');
 
 $DBUSER = "root";
-$DBPASSWORD = "root123";
+$DBPASSWORD = "Root123!";
 $DBNAME = "nextypay";
-$DBHOST = "127.0.0.1";
+$DBHOST = "localhost";
 $npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
 $setup = new Nextypaysetup();
 $setup->uninstall();
