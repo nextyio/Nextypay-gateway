@@ -98,6 +98,8 @@ class Nextypayupdatedb{
 
     public function update_max_block($number) {
         $sql  = "INSERT INTO vars VALUES (0,$number) ON DUPLICATE KEY UPDATE maxBlock='$number';";
+        echo "updating max block number loaded <br>";
+        echo $sql."<br>";
         return $this->query_db($sql);
     }
 
