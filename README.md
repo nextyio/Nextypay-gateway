@@ -1,1 +1,1 @@
-# Nextypay-gateway
+# nextypay-php-gateway
