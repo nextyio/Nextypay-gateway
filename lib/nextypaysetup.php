@@ -39,7 +39,7 @@ class NextypaySetup {
             returnUrl text NOT NULL,
             ntyAmount decimal(60,0) NOT NULL,
             minBlockDistance mediumint(10) DEFAULT 0,
-            startTime datetime NOT NULL,
+            startTime datetime,
             endTime datetime,
             status enum('Pending', 'Paid', 'Comfirmed'),
 

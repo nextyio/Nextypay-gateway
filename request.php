@@ -20,9 +20,9 @@ $mainnet = 'http://13.228.68.50:8545';
 $_url = $mainnet;
 
 $DBUSER = "root";
-$DBPASSWORD = "root123";
+$DBPASSWORD = "Root123!";
 $DBNAME = "nextypay";
-$DBHOST = "127.0.0.1";
+$DBHOST = "localhost";
 $npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
 
 $_updatedb->set_url($_url);

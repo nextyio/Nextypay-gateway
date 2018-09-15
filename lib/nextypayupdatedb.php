@@ -142,11 +142,12 @@ class Nextypayupdatedb{
 
         $table_name = $this->get_requests_table_name();
         $sql = "INSERT INTO " . $table_name . "(shopId, orderId, extraData, callbackUrl, returnUrl, ntyAmount,
-            minBlockDistance, startTime, endTime, status, fromWallet, toWallet, wallet) VALUES
+            minBlockDistance, status, fromWallet, toWallet, wallet) VALUES
 
             ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$ntyAmount', '$minBlockDistance', 
-            '$startTime', '$endTime', 'Pending', '$_fromWallet', '$_toWallet', '$_wallet')";
-
+            'Pending', '$_fromWallet', '$_toWallet', '$_wallet')";
+        echo "adding request : <br>";
+        echo $sql;
         $this->query_db($sql);
 
     }
@@ -225,7 +226,7 @@ class Nextypayupdatedb{
 
     }
 
-    function updateTransactions() {
+    public function updateTransactions() {
         $currentBlock = $this->getMaxBlock();
         $tTable = $this->get_transactions_table_name();
         $rTable = $this->get_requests_table_name();
@@ -254,6 +255,7 @@ class Nextypayupdatedb{
         $sql = "UPDATE $rTable 
                 SET status = 'Paid'
                 WHERE status='Pending' AND ntyAmount <= GET_TRANSFERED(id)";
+        echo $sql;
         $result = $this->query_db($sql);
     }
 

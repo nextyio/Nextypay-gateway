@@ -14,6 +14,8 @@ class Nextypayblockchain
 	}
 
 	public function get_max_block_number($url){
+		
+		echo $url;
 		$fields = array(
 		'jsonrpc' => "2.0",
 		'method' => 'eth_blockNumber',
@@ -21,7 +23,6 @@ class Nextypayblockchain
 		'id' => 100,
 		);
 		$data_string = json_encode($fields);
-
 		$ch = curl_init($url);
 
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -30,7 +31,6 @@ class Nextypayblockchain
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Content-Type: application/json')
 		);
-
 		$result = curl_exec($ch);
 		$result= json_decode($result, true);
 		return hexdec($result['result']);

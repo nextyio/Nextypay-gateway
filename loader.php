@@ -30,7 +30,8 @@ $_updatedb->set_connection($npdb);
 $_updatedb->set_includes($_blockchain,$_functions);
 //$_updatedb->init_blocks_table_db();
 $_updatedb->updatedb();
-echo $_updatedb->getTransfered(0);
+//$_updatedb->updateRequests();
+echo $_updatedb->getTransfered(1);
 /*
              $max_block_number = $_blockchain->get_max_block_number($_url);
              $hex_max_block_number="0x".strval(dechex($max_block_number));
