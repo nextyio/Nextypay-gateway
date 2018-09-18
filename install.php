@@ -1,5 +1,6 @@
 <?php
 require_once('setting.php');
+require_once('lib/nextypaysetup.php');
 
 $npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
 $setup = new Nextypaysetup();

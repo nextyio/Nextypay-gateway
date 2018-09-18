@@ -1,4 +1,5 @@
 <?php
+    require_once('template/header.html');
     require_once('setting.php');
 
     $_url = $mainnet;
@@ -13,7 +14,7 @@
     $returnUrl = isset($_POST['returnUrl']) ? utf8_decode(urldecode($_POST['returnUrl'])) : '';
     $shopId = isset($_POST['shopId']) ? $_POST['shopId'] : '';
     $orderId = isset($_POST['orderId']) ? $_POST['orderId'] : '';
-    $minBlockDistance = isset($_POST['minBlockDistance']) ? $_POST['minBlockDistance'] : '';
+    $minBlockDistance = isset($_POST['minBlockDistance']) ? $_POST['minBlockDistance'] : 1;
     $toWallet = isset($_POST['toWallet']) ? $_POST['toWallet'] : '';
     $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : '';
     $amount = isset($_POST['amount']) ? $_POST['amount']: 0;
@@ -26,6 +27,8 @@
     $endTime = NULL;
     $fromWallet = NULL;
 
+    $postFormat = $callbackUrl && $shopId && $orderId && $toWallet && $wallet && $ntyAmount;
+
     $QRText ='{"walletaddress":"'.$toWallet.'","uoid":"'.$orderId.'","amount":"'.$ntyAmount.'"}';
     $QRTextHex="0x".$_functions->strToHex($QRText);
     $extraData = $QRTextHex;
@@ -37,6 +40,8 @@
     foreach ($_POST as $key => $value) {
         //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
-    require_once('template/request.html');
+    if ($postFormat)
+        require_once('template/request.html'); else echo "Invalid request";
+    require_once('template/footer.html')
 ?>
 <script src="template/js/user.js"></script>
