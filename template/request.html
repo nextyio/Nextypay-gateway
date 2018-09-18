@@ -1,0 +1,64 @@
+<div class = "col-xs-2 col-md-4"> </div>
+<form class = "col-xs-8 col-md-4 panel panel-default credit-card-box align-middle">
+    <div class="col-xs-12 col-md-12 panel-heading display-table " >
+        <div class="row display-tr" >
+            <h3 class=" panel-title align-middle" >Payment Details</h3>
+        </div>                    
+    </div>
+    <div class="panel-body paddingTop">
+        <form role="form" id="payment-form">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label>Merchant</label>
+                        <p> test Merchant</p>
+                        <label>Transfer to Wallet</label>
+                        <p>
+                            <?php 
+                                echo $_POST['toWallet'] ;
+                            ?>
+                        </p>
+                        <label>Order Id</label>
+                        <p><?php echo $_POST['orderId'] ;?></p>
+                    </div>                            
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-7 col-md-7">
+                    <div class="form-group">
+                        <label for="cardExpiry">Amount</label>
+                        <p>
+                            <?php 
+                                echo $_POST['amount'];
+                            ?>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-xs-5 col-md-5 pull-right">
+                    <div class="form-group">
+                        <label for="cardCVC">Currency</label>
+                        <p>
+                            <?php   
+                                echo $_POST['currency']
+                            ?>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="form-group ">
+                        <label for="couponCode">QR CODE</label> 
+                        <?php 
+                            echo '<img src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='
+                                    .$QRTextEncode.'&choe=UTF-8" title="Link to Google.com" />';
+                        ?>
+                    </div>
+                </div>                        
+            </div>
+        </form>
+    </div>
+</form>
