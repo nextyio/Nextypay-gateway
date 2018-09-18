@@ -132,6 +132,14 @@ class Nextypayupdatedb{
         return false;
     }
 
+    public function getReqId($shopId,$orderId,$wallet) {
+        $table_name=$this->get_requests_table_name();
+        $sql= "SELECT id AS val FROM $table_name WHERE shopId = '$shopId' AND orderId = '$orderId' AND wallet = '$wallet'";
+        $result = $this->get_value_query_db($sql);
+        if ($result) return $result;
+        return false;
+    }
+
     public function addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $ntyAmount, 
                                 $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) {
 
@@ -146,10 +154,10 @@ class Nextypayupdatedb{
 
             ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$ntyAmount', '$minBlockDistance', 
             'Pending', '$_fromWallet', '$_toWallet', '$_wallet')";
-        echo "adding request : <br>";
-        echo $sql;
-        $this->query_db($sql);
-
+        //echo "adding request : <br>";
+        //echo $sql;
+        if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
+        return $this->getReqId($shopId,$orderId,$wallet);
     }
 
     
@@ -171,7 +179,15 @@ class Nextypayupdatedb{
         $table_name = $this->get_transactions_table_name();
         $sql = "SELECT SUM(ntyAmount) as val FROM $table_name
         WHERE reqId = '$reqId' AND status = 'Accepted'";
-        echo $sql."<br>";
+        $val = $this->get_value_query_db($sql);
+        if (empty($val)) return 0;
+        return $val;
+    }
+
+    public function getGasUsed($reqId) {
+        $table_name = $this->get_transactions_table_name();
+        $sql = "SELECT SUM(gasUsed) as val FROM $table_name
+        WHERE reqId = '$reqId' AND status = 'Accepted'";
         $val = $this->get_value_query_db($sql);
         if (empty($val)) return 0;
         return $val;
@@ -222,14 +238,12 @@ class Nextypayupdatedb{
         return true;
     }
 
-    function updateRequest($reqId) {
-
-    }
 
     public function updateTransactions() {
         $currentBlock = $this->getMaxBlock();
         $tTable = $this->get_transactions_table_name();
         $rTable = $this->get_requests_table_name();
+        /*
         $sql = "SELECT DISTINCT $tTable.reqId as val FROM $tTable
         join $rTable on $tTable.reqId = $rTable.id 
         WHERE $tTable.status= 'Pending' AND $tTable.blockNumber + $rTable.minBlockDistance < $currentBlock";
@@ -237,7 +251,7 @@ class Nextypayupdatedb{
         echo $sql;
         while($row = mysqli_fetch_assoc($result)) {
         echo "<br>" . $row['val'] . "<br>";
-        }
+        }*/
         //echo json_encode($result);
         //Ultimate
         $sql = "UPDATE $tTable
@@ -259,40 +273,66 @@ class Nextypayupdatedb{
         $result = $this->query_db($sql);
     }
 
-    private function callback($callbackUrl, $shopId, $orderId, $status, $extraData) {
+    private function reqComplete($reqId) {
+        $tTable = $this->get_transactions_table_name();
+        $rTable = $this->get_requests_table_name();
+        $sql = "UPDATE $rTable 
+                SET status = 'Comfirmed'
+                WHERE id = '$reqId'";
+                echo $sql;
+        $result = $this->query_db($sql);
+    }
+
+    private function callback($callbackUrl, $shopId, $orderId, $status, $extraData, $amount, $gas) {
 		$fields = array(
 			'shopId' => $shopId,
 			'orderId' => $orderId,
 			'status' => $status,
             'extraData' => $extraData,
+            'amount' => $amount,
+            'gas' => $gas,
+            'success' => true
         );
         
-        $url = $callbackUrl;
 
-		$data_string = json_encode($fields);
-        $ch = curl_init($url);
+        $postvars='';
+        $sep='';
+        foreach($fields as $key=>$value)
+        {
+                $postvars.= $sep.urlencode($key).'='.urlencode($value);
+                $sep='&';
+        }
         
-        //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        //curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-			'Content-Type: application/json',
-			'Content-Length: ' . strlen($data_string))
-		);
-
+        $ch = curl_init();
+        
+        curl_setopt($ch,CURLOPT_URL,$callbackUrl);
+        curl_setopt($ch,CURLOPT_POST,count($fields));
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$postvars);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        
         $result = curl_exec($ch);
-        //echo $result;
-        $json_result = json_decode($result,true);
-        echo "<br>doing callback<br>";
-        echo $json_result;
-        return $json_result;
+        echo $result;
+        curl_close($ch);
+        
+        return $result;
+    }
+
+    public function getReturnUrl($reqId) {
+        $table_name=$this->get_requests_table_name();
+        $sql= "SELECT returnUrl AS val FROM $table_name WHERE id ='$reqId' AND status ='Comfirmed'";
+        $val = $this->get_value_query_db($sql);
+        if ($val) return $val;
+        return false;
+    }
+
+    function callbackVerify($response) {
+        if ($response == 'Ok') return true;
+        return false;
     }
 
     function comfirmRequests() {
         $rTable = $this->get_requests_table_name();
-        $sql = "SELECT id, extraData, callbackUrl, shopId, orderId FROM $rTable
+        $sql = "SELECT id, extraData, callbackUrl, shopId, orderId, ntyAmount FROM $rTable
                 WHERE status = 'Paid' "; 
         echo $sql;
         $result = $this->get_values_query_db($sql);
@@ -302,11 +342,15 @@ class Nextypayupdatedb{
             $callbackUrl = $row['callbackUrl'];
             $shopId = $row['shopId'];
             $orderId = $row['orderId'];
-            $status = 'Paid';
+            $status = 'paid';
+            $ntyAmount = $this->getTransfered($reqId);
+            $gas = $this->getGasUsed($reqId);
             // echo "<br> id " . $row['id'] . "<br>";
             // echo "<br> extraData " . $row['extraData'] . "<br>";
-            // echo "<br> callbackUrl " . $row['callbackUrl'] . "<br>";
-            $response = $this->callback($callbackUrl, $shopId, $orderId, $status, $extraData);
+            echo "<br> callbackUrl " . $row['callbackUrl'] . "<br>";
+            $response = $this->callback($callbackUrl, $shopId, $orderId, $status, $extraData,$ntyAmount,$gas);
+            //echo $response;
+            if ($this->callbackVerify($response)) $this->reqComplete($reqId);
         }
     }
 
@@ -316,6 +360,9 @@ class Nextypayupdatedb{
 
     public function updatedb(){
         //$this->init_blocks_table_db();
+        $this->updateTransactions();
+        $this->updateRequests();
+        $this->comfirmRequests();
         echo "last Block loaded : ". $this->getMaxBlock() . "<br>";
         $total=$this->_blocks_loaded_each_request;
         //scan from this block number
@@ -330,9 +377,6 @@ class Nextypayupdatedb{
             if (!$this->scan_block_db($blockContent)) break;
             $this->update_max_block($scan-1);
         }
-        $this->updateTransactions();
-        $this->updateRequests();
-        $this->comfirmRequests();
     }
 
 }
