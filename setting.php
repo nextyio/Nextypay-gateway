@@ -1,11 +1,13 @@
 <?php
 error_reporting(E_ERROR | E_PARSE);
-require_once('lib/npdb.php');
 
+$gatewayWallet = '0x6f53c8502bb884775e422c7c34be681554cee2ba';
+require_once('lib/npdb.php');
 require_once('lib/nextypayblockchain.php');
 require_once('lib/nextypayexchange.php');
 require_once('lib/nextypayfunctions.php');
 require_once('lib/nextypayupdatedb.php');
+require_once('lib/helper.php');
 //require_once('request.html');
 
 

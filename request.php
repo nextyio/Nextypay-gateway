@@ -1,5 +1,8 @@
 <?php
     require_once('template/header.html');
+?>
+    <link rel="stylesheet" href="template/css/request.css"/>  
+<?php
     require_once('setting.php');
 
     $_url = $mainnet;
@@ -27,7 +30,7 @@
     $endTime = NULL;
     $fromWallet = NULL;
 
-    $postFormat = $callbackUrl && $shopId && $orderId && $toWallet && $wallet && $ntyAmount;
+    //$postFormat = $callbackUrl && $shopId && $orderId && $toWallet && $wallet && $ntyAmount;
 
     $QRText ='{"walletaddress":"'.$toWallet.'","uoid":"'.$orderId.'","amount":"'.$ntyAmount.'"}';
     $QRTextHex="0x".$_functions->strToHex($QRText);
@@ -37,11 +40,15 @@
     $reqId = $_updatedb->addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $ntyAmount, 
     $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) ;
 
+    $merchantName = "test Merchant Name";
+
     foreach ($_POST as $key => $value) {
         //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
-    if ($postFormat)
-        require_once('template/request.html'); else echo "Invalid request";
+    if ($reqId)
+        require_once('template/request.html'); else require_once('template/error.html');
     require_once('template/footer.html')
 ?>
-<script src="template/js/user.js"></script>
+    <script>
+        call_ajax(new Date(), <?php echo $reqId; ?>,600,3 );
+    </script>
