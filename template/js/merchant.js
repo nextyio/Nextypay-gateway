@@ -14,7 +14,9 @@ function addMerchant(wallet, merchantName, url, email){
   var merchantName = $('#merchantName').val();
   var url = $('#url').val();
   var email = $('#email').val();
+  var isMobile = ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) );
   //alert('email='+ email);
+  //alert(isMobile)
   
   $.post("ajaxMerchant.php",
   {
@@ -22,25 +24,34 @@ function addMerchant(wallet, merchantName, url, email){
     'wallet': wallet,
     'merchantName': merchantName,
     'url' : url,
-    'email' : email
+    'email' : email,
+    'isMobile' : isMobile
   },
   function(data, status){
       //alert("Data: " + data + "\nStatus: " + status);
+      console.log("Data: " + data + "\nStatus: " + status);
       if (data && status) {
-          $QRUrl = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" + data + "&choe=UTF-8";
           //alert ($QRUrl)
           $("#infoText").text('QR Scan');
-          $("#QRImg").attr("src","https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" + data + 
-          "&choe=UTF-8");
-          $("#QRImg").show();
+          $("#QRImg").attr("src",data);
+          $("#androidAppDirect").attr("href",data);
+          if (!isMobile) {
+                $("#QRImg").show(); 
+                $("#androidAppDirect").hide();
+                $("#infoText").show();
+            } else {
+                $("#androidAppDirect").show();
+                $("#QRImg").hide();
+                $("#infoText").hide();
+            };
           $("#androidApp").show();
           $("#iosApp").show();
           requestStatus();
       } else {
-        $QRUrl = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=" + data + "&choe=UTF-8";
         //alert ($QRUrl)
         $("#infoText").text('This wallet address is already registered!');
         $("#QRImg").hide();
+        $("#androidAppDirect").hide();
         $("#androidApp").hide();
         $("#iosApp").hide();
       }

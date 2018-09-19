@@ -120,7 +120,7 @@ class Nextypayupdatedb{
         $this->update_max_block($max_block_number);
     }
 
-    public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions) {
+    public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions, $isMobile) {
         $_wallet = strtolower($wallet);
         $publicKey = 'test public key';
         $privateKey = 'test private key';
@@ -140,7 +140,10 @@ class Nextypayupdatedb{
         $QRTextHex="0x".$_functions->strToHex($QRText);
         $extraData = $QRTextHex;
         $QRTextEncode= urlencode ( $QRText );
-        return $QRTextEncode;
+        $QRUrl = "https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=".$QRTextEncode."&choe=UTF-8";
+        $androidUrl = "nextywallet://user_id=addMerchant&amount=$comfirmAmount&address=$gatewayWallet&app_name=nextypayGateway', '_system'";
+        if ($isMobile == 'true') return $androidUrl;
+        return $QRUrl;
     }
 
     public function getMerchant($wallet) {

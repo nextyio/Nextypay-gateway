@@ -15,11 +15,13 @@ $_updatedb->set_gatewayWallet($gatewayWallet);
 //if ($returnUrl) echo $returnUrl;
 //echo "ajaxMerchant called";
 if ($_POST['service'] == 'addMerchant') {
+    $isMobile = $_POST['isMobile'];
     $wallet = $_POST['wallet'];
     $merchantName = $_POST['merchantName'];
     $url = $_POST['url'];
     $email = $_POST['email'];
-    echo $_updatedb->addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions);
+    $output = $_updatedb->addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions, $isMobile); 
+    if ($output) echo $output;
 } else 
 if ($_POST['service'] == 'checkStatus') {
     $wallet = $_POST['wallet'];
