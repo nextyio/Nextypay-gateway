@@ -1,4 +1,4 @@
-<script type="text/javascript">
+
 function countInSecond(startTime,endTime) {
   var timeDiff = endTime - startTime; //in ms
   // strip the ms
@@ -32,6 +32,3 @@ function call_ajax(startTime,reqId,timeout,interval){
         });
 	}, interval*1000);
 }
-
-call_ajax(new Date(), <?php echo $reqId; ?>,600,3 );
-</script>
