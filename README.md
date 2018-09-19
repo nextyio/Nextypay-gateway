@@ -1,6 +1,6 @@
 # nextypay-php-gateway
 
-This php payment gateway is based for E-Commerce system of Nexty Plattform (Demo : http://45.77.248.53).
+This php payment gateway is based for E-Commerce system of Nexty Plattform (Demo : http://45.77.248.53).  
 You can register as Merchant [http://45.77.248.53/register.php](http://45.77.248.53/register.php).
 Your customers should be redirected with post data [http://45.77.248.53/request.php](http://45.77.248.53/request.php).
 
@@ -46,9 +46,8 @@ All request of merchants with status 'Pending' or 'Comfirmed' will be rejected.
 
 ## Post
 
-The most E-commerce plattform has sample payment gateway with callback. If you want to use this Nextypay gateway, you need follow belows:
-. Post params : 
-
+The most E-commerce plattform has sample payment gateway with callback. If you want to use this Nextypay gateway, you need follow belows:  
+Post params : 
 -   wallet : the registered wallet, used to identify merchant to merchant
 -   callbackUrl : your callback url, that listen the gateway to get payment status
 -   returnUrl : redirect your customers back to your shop with this link
@@ -61,7 +60,7 @@ The most E-commerce plattform has sample payment gateway with callback. If you w
 -   minBlockDistance (optional) : the gateway only accepts the transactions, that has the distance to current block greater than this param
 -   toWallet(optional) : the wallet used for this order, gateway use the registered wallet if this param not inlcuded in request
 
-. Procedure :
+Procedure :
 -    Request primary key = (wallet, shopId, orderId)
 -    Merchant redirect customers to gateway with post data(example : http://45.77.248.53/request.php)
 -    Gateway checks tokenKey and ignore if the key invalid

@@ -51,7 +51,7 @@ function addMerchant(wallet, merchantName, url, email){
 function statusWaiting(startTime,wallet,timeout,interval){
     if (!($("#popup").data('bs.modal') || {}).isShown)   return; 
 	var seconds=countInSecond(startTime,new Date());
-	console.log(seconds, wallet);
+	//console.log(seconds, wallet);
 	if (seconds>timeout) {
 		console.log("time out");
 		return;
