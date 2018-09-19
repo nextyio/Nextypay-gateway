@@ -15,9 +15,9 @@ Your customers should be redirected with post data [http://45.77.248.53/request.
 
 ## Install
 
-php install.php
+- php install.php
 
-Max scanned blocknumber init as max blocknumber on blockchain. All payments before wont be scanned.
+- Max scanned blocknumber init as max blocknumber on blockchain. All payments before wont be scanned.
 
 ## Cronjob
 
@@ -25,22 +25,22 @@ The file loader.php scanns 30(default) blocks from the next block of the max sca
 the scanning block is not created.
 
 Bash files (loop the loader.php):
-. scan.sh (Linux System)
-. scanWin.sh (Windows system with mingw or cygwin)
+-  scan.sh (Linux System)
+-  scanWin.sh (Windows system with mingw or cygwin)
 
 Cron guides:
-. Linux: cronjob/crontab
-. Windows: https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc748993(v=ws.11)
+-  Linux: cronjob/crontab
+-  Windows: https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2008-R2-and-2008/cc748993(v=ws.11)
 
 
 ## Register
 
-. Register form with a wallet as primary key for a merchant
-. Submit
-. QR to pay with Nexty mobile apps appears. The tiny amount is created as random.
-. Wait till the gateway catchs the transaction as verify. The status of Merchant changes from 'Pending' to 'Comfirmed'.
-. Crytop Keys will be created for each merchant and be saved in database.
-. Only gateway admin has the right to the change status to 'Accepted'.
+-  Register form with a wallet as primary key for a merchant
+-  Submit
+-  QR to pay with Nexty mobile apps appears. The tiny amount is created as random.
+-  Wait till the gateway catchs the transaction as verify. The status of Merchant changes from 'Pending' to 'Comfirmed'.
+-  Crytop Keys will be created for each merchant and be saved in database.
+-  Only gateway admin has the right to the change status to 'Accepted'.
 
 All request of merchants with status 'Pending' or 'Comfirmed' will be rejected.
 
