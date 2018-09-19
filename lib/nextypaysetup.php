@@ -15,9 +15,13 @@ class NextypaySetup {
             wallet char(50) NOT NULL,
             name char(50),
             url char(50),
+            email char(50),
             totalRequest mediumint(20) DEFAULT 0,
             totalAmount mediumint(20) DEFAULT 0,
-            tokenKey char(50),
+            publicKey char(50),
+            privateKey char(50),
+            comfirmAmount decimal(60,0) NOT NULL,
+            status enum('Pending', 'Comfirmed', 'Accepted'),
 
             PRIMARY KEY (wallet)
         ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";

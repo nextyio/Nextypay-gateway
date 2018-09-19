@@ -17,6 +17,7 @@ class Nextypayupdatedb{
     public $_min_blocks_saved_db;
     public $_max_blocks_saved_db;
     public $_blocks_loaded_each_request;
+    public $_gatewayWallet;
 
     /**
         * @param  object  $registry  Registry Object
@@ -35,6 +36,10 @@ class Nextypayupdatedb{
 
     public function set_url($url){
         $this->_url=$url;
+    }
+
+    public function set_gatewayWallet($wallet) {
+        $this->_gatewayWallet = $wallet;
     }
 
     public function set_connection($connection){
@@ -88,7 +93,6 @@ class Nextypayupdatedb{
     //Check exist
 
     private function transaction_exist($hash){
-
         $table_name=$this->get_transactions_table_name();
         $sql= "SELECT hash AS val FROM $table_name WHERE hash='$hash'";
         $result = $this->get_value_query_db($sql);
@@ -98,8 +102,8 @@ class Nextypayupdatedb{
 
     public function update_max_block($number) {
         $sql  = "INSERT INTO vars VALUES (0,$number) ON DUPLICATE KEY UPDATE maxBlock='$number';";
-        echo "updating max block number loaded <br>";
-        echo $sql."<br>";
+        //echo "updating max block number loaded <br>";
+        //echo $sql."<br>";
         return $this->query_db($sql);
     }
 
@@ -116,12 +120,42 @@ class Nextypayupdatedb{
         $this->update_max_block($max_block_number);
     }
 
-    public function addMerchant($wallet, $name, $url, $tokenKey) {
+    public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions) {
         $_wallet = strtolower($wallet);
+        $publicKey = 'test public key';
+        $privateKey = 'test private key';
+        $comfirmAmount = rand(1,10);
+        $weiAmount = $comfirmAmount *1e18;
         $table_name = $this->get_merchants_table_name();
-        $sql = "INSERT INTO " . $table_name . "(wallet, name, url, totalRequest, totalAmount, tokenKey) VALUES
-            ('$_wallet', '$name', '$url', 0, 0, '$tokenKey')";
+
+        $sql = "DELETE FROM $table_name
+        WHERE wallet = '$_wallet' AND status = 'Pending'";
         $this->query_db($sql);
+
+        $sql = "INSERT INTO " . $table_name . "(wallet, name, url, email, totalRequest, totalAmount, publicKey, privateKey, comfirmAmount, status) VALUES
+            ('$_wallet', '$merchantName', '$url', '$email', 0, 0, '$publicKey', '$privateKey', $weiAmount, 'Pending')";
+        $result = $this->query_db($sql);
+        if (!$result) return false;
+        $QRText ='{"walletaddress":"'.$gatewayWallet.'","uoid":"addMerchant","amount":"'.$comfirmAmount.'"}';
+        $QRTextHex="0x".$_functions->strToHex($QRText);
+        $extraData = $QRTextHex;
+        $QRTextEncode= urlencode ( $QRText );
+        return $QRTextEncode;
+    }
+
+    public function getMerchant($wallet) {
+        $table_name = $this->get_merchants_table_name();
+        $sql = "SELECT * FROM $table_name 
+                WHERE wallet = '$wallet'";
+        $result =$this->query_db($sql);
+    }
+
+    public function getMerchantStatus($wallet) {
+        $table_name=$this->get_merchants_table_name();
+        $sql= "SELECT status AS val FROM $table_name WHERE wallet='$wallet'";
+        $result = $this->get_value_query_db($sql);
+        if ($result) return $result;
+        return false;
     }
 
     private function requestExist($wallet, $shopId, $orderId) {
@@ -147,12 +181,14 @@ class Nextypayupdatedb{
         $_fromWallet = strtolower($fromWallet);
         $_toWallet = strtolower($toWallet);
         $_wallet = strtolower($wallet);
+        $_weiAmount = $ntyAmount *1e18;
 
         $table_name = $this->get_requests_table_name();
+
         $sql = "INSERT INTO " . $table_name . "(shopId, orderId, extraData, callbackUrl, returnUrl, ntyAmount,
             minBlockDistance, status, fromWallet, toWallet, wallet) VALUES
 
-            ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$ntyAmount', '$minBlockDistance', 
+            ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$_weiAmount', '$minBlockDistance', 
             'Pending', '$_fromWallet', '$_toWallet', '$_wallet')";
         //echo "adding request : <br>";
         //echo $sql;
@@ -193,34 +229,47 @@ class Nextypayupdatedb{
         return $val;
     }
 
+    public function searchMerchant($transaction, $fromWallet, $toWallet, $ntyAmount) {
+        $_fromWallet = strtolower($fromWallet);
+        echo "<br>gatewayWallet = $this->_gatewayWallet from $fromWallet to $toWallet <br>";
+        if (strtolower($this->_gatewayWallet) != strtolower($toWallet)) return false;
+        $table = $this->get_merchants_table_name();
+        //check requests, extraData = extraData, wallet = toWallet return request id
+        $sql = "UPDATE $table
+                SET status='Comfirmed' 
+                WHERE status = 'Pending' AND comfirmAmount = '$ntyAmount' AND wallet= '$_fromWallet' ";
+        echo "<br>$sql <br>";
+        return $this->query_db($sql);
+    }
+
     private function insert_transactions_db($transactions){
         //search request by toWallet and extraData
         $table_name=$this->get_transactions_table_name();
         foreach ($transactions as $transaction) {
+            $toWallet = $transaction['to'];
+            $fromWallet = $transaction['from'];
+            $ntyAmount = hexdec($transaction['value']);
             $extraData=$transaction['input'];
             $reqId = $this->searchReqId($transaction);
+            $merchantId = $this->searchMerchant($transaction, $fromWallet, $toWallet, $ntyAmount);
 
             if ($reqId >= 0){
 
                 $block_hash = $transaction['blockHash'];
                 $blockNumber = hexdec($transaction['blockNumber']);
-                echo $blockNumber;
+                //echo $blockNumber;
 
-                $fromWallet = $transaction['from'];
-                $toWallet = $transaction['to'];
-                $ntyAmount = hexdec($transaction['value']);
                 $gasUsed = hexdec($transaction['gas']);
                 $status = "Pending";
 
                 $hash=strtolower($transaction['hash']);
-                echo "hash = " . json_encode($transaction) . "<br>";
-                echo "ntyAmount = " . $ntyAmount;
-                $extraData=$transaction['input'];
+                //echo "hash = " . json_encode($transaction) . "<br>";
+                //echo "ntyAmount = " . $ntyAmount;
 
                 if (!$this->transaction_exist($hash)){
                     $sql = "INSERT INTO " . $table_name . "(hash, fromWallet, toWallet, ntyAmount, gasUsed, blockNumber, reqId, status) VALUES
                         ('$hash', '$fromWallet', '$toWallet', '$ntyAmount', '$gasUsed', '$blockNumber', '$reqId', '$status')";
-                        echo $sql."<br>";
+                        //echo $sql."<br>";
                     $this->query_db($sql);
                 }
 
@@ -343,7 +392,8 @@ class Nextypayupdatedb{
             $shopId = $row['shopId'];
             $orderId = $row['orderId'];
             $status = 'paid';
-            $ntyAmount = $this->getTransfered($reqId);
+            $weiAmount = $this->getTransfered($reqId);
+            $ntyAmount = $weiAmount *1e-18;
             $gas = $this->getGasUsed($reqId);
             // echo "<br> id " . $row['id'] . "<br>";
             // echo "<br> extraData " . $row['extraData'] . "<br>";
