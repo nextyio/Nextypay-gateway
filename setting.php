@@ -21,7 +21,7 @@ $testnet = "http://125.212.250.61:11111";
 $local = "http://127.0.0.1:8545";
 $mainnet = 'http://13.228.68.50:8545';
 $DBUSER = "root";
-$DBPASSWORD = "root123";
+$DBPASSWORD = "Root123!";
 $DBNAME = "nextypay";
 $DBHOST = "localhost";
 ?>
