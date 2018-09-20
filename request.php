@@ -45,7 +45,7 @@
     foreach ($_POST as $key => $value) {
         //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
-    if ($reqId)
+    if (isset($_POST['wallet']))
         require_once('template/request.html'); else require_once('template/error.html');
     require_once('template/footer.html')
 ?>
