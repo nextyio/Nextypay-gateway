@@ -183,7 +183,7 @@ class Nextypayupdatedb{
         $_extraData = strtolower($extraData);
         $_fromWallet = strtolower($fromWallet);
         //$_toWallet = strtolower($toWallet);
-        $_toWallet = ((!$toWallet) || ($toWallet == 'default')) ? $_toWallet = $_wallet : strtolower($toWallet);
+        $_toWallet = ((!$toWallet) || ($toWallet == 'default')) ? $_wallet : strtolower($toWallet);
         $_weiAmount = $ntyAmount *1e18;
 
         $table_name = $this->get_requests_table_name();
