@@ -179,11 +179,11 @@ class Nextypayupdatedb{
 
     public function addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $ntyAmount, 
                                 $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) {
-
+        $_wallet = strtolower($wallet);
         $_extraData = strtolower($extraData);
         $_fromWallet = strtolower($fromWallet);
-        $_toWallet = strtolower($toWallet);
-        $_wallet = strtolower($wallet);
+        //$_toWallet = strtolower($toWallet);
+        $_toWallet = ((!$toWallet) || ($toWallet == 'default')) ? $_toWallet = $_wallet : strtolower($toWallet);
         $_weiAmount = $ntyAmount *1e18;
 
         $table_name = $this->get_requests_table_name();
