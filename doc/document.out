@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Params define}{}% 2
+\BOOKMARK [1][-]{section.3}{IO requested formats }{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{QR creation 1010}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{QR cancellation 2010}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Barcode creation 3010}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{Barcode cancellation 3110}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.5}{Cancellation of transaction 4010}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.6}{Status of transaction 5010}{section.3}% 9
