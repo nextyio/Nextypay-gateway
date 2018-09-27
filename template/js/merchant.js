@@ -32,6 +32,7 @@ function addMerchant(wallet, merchantName, url, email){
       console.log("Data: " + data + "\nStatus: " + status);
       if (data && status) {
           //alert ($QRUrl)
+          //console.log(data);
           $("#infoText").text('QR Scan');
           $("#QRImg").attr("src",data);
           $("#androidAppDirect").attr("href",data);
