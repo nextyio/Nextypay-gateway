@@ -128,6 +128,15 @@ class Nextypayupdatedb{
         return $result;
     }
 
+    public function getWalletByMid($mid) {
+        $table = $this->get_merchants_table_name();
+        $sql = "SELECT COALESCE(wallet, 0) as val 
+                FROM $table
+                WHERE mid = '$mid'";
+        $result = $this->get_value_query_db($sql);
+        return $result;
+    }
+
     public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions, $isMobile) {
         $_wallet = strtolower($wallet);
         $publicKey = 'test public key';
