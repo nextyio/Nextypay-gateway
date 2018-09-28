@@ -17,3 +17,4 @@ Result:
 <img alt="testing" src="http://davidscotttufts.com/code/barcode.php?text=testing" />
 
 http://davidscotttufts.com/2009/03/31/how-to-create-barcodes-in-php/
+http://localhost/nextypay-gateway/barcodeAPI/barcode.php?text=The%20Real%20David%20Tufts&orientation=vertical&size=40
