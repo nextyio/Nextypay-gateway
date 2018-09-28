@@ -120,6 +120,14 @@ class Nextypayupdatedb{
         $this->update_max_block($max_block_number);
     }
 
+    public function getMaxMid() {
+        $table = $this->get_merchants_table_name();
+        $sql = "SELECT COALESCE(MAX(mid), 0) as val 
+                FROM $table";
+        $result = $this->get_value_query_db($sql);
+        return $result;
+    }
+
     public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions, $isMobile) {
         $_wallet = strtolower($wallet);
         $publicKey = 'test public key';
@@ -132,8 +140,10 @@ class Nextypayupdatedb{
         WHERE wallet = '$_wallet' AND status = 'Pending'";
         $this->query_db($sql);
 
-        $sql = "INSERT INTO " . $table_name . "(wallet, name, url, email, totalRequest, totalAmount, publicKey, privateKey, comfirmAmount, status) VALUES
-            ('$_wallet', '$merchantName', '$url', '$email', 0, 0, '$publicKey', '$privateKey', $weiAmount, 'Pending')";
+        $mid = $this->getMaxMid() + 1;
+
+        $sql = "INSERT INTO " . $table_name . "(mid, wallet, name, url, email, totalRequest, totalAmount, publicKey, privateKey, comfirmAmount, status) VALUES
+            ('$mid', '$_wallet', '$merchantName', '$url', '$email', 0, 0, '$publicKey', '$privateKey', $weiAmount, 'Pending')";
         $result = $this->query_db($sql);
         if (!$result) return false;
         $QRText ='{"walletaddress":"'.$gatewayWallet.'","uoid":"addMerchant","amount":"'.$comfirmAmount.'"}';

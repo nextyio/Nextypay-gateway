@@ -12,6 +12,7 @@ class NextypaySetup {
         $table_name = $this->merchants_table_name;
         $sql="
         CREATE TABLE IF NOT EXISTS " . "$table_name" . "(
+            mid mediumint(20) NOT NULL default 1,
             wallet char(50) NOT NULL,
             name char(50),
             url char(50),
