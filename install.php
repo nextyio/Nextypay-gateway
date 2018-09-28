@@ -19,5 +19,6 @@ $_updatedb->set_url($_url);
 $_updatedb->set_connection($npdb);
 $_updatedb->set_includes($_blockchain,$_functions);
 $_updatedb->init_blocks_table_db(0);
+echo $_updatedb->getMaxMid();
 
 ?>
