@@ -130,7 +130,7 @@ class Nextypayupdatedb{
 
     public function getWalletByMid($mid) {
         $table = $this->get_merchants_table_name();
-        $sql = "SELECT COALESCE(wallet, 0) as val 
+        $sql = "SELECT COALESCE(wallet, '0x0') as val 
                 FROM $table
                 WHERE mid = '$mid'";
         $result = $this->get_value_query_db($sql);
@@ -208,12 +208,12 @@ class Nextypayupdatedb{
         $table_name = $this->get_requests_table_name();
 
         $sql = "INSERT INTO " . $table_name . "(shopId, orderId, extraData, callbackUrl, returnUrl, ntyAmount,
-            minBlockDistance, status, fromWallet, toWallet, wallet) VALUES
+            minBlockDistance, status, fromWallet, toWallet, wallet, startTime, endTime) VALUES
 
             ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$_weiAmount', '$minBlockDistance', 
-            'Pending', '$_fromWallet', '$_toWallet', '$_wallet')";
+            'Pending', '$_fromWallet', '$_toWallet', '$_wallet', '$startTime', '$endTime')";
         //echo "adding request : <br>";
-        //echo $sql;
+        echo $sql;
         if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
         return $this->getReqId($shopId,$orderId,$wallet);
     }
@@ -392,6 +392,15 @@ class Nextypayupdatedb{
         $table_name=$this->get_requests_table_name();
         $sql= "SELECT returnUrl AS val FROM $table_name WHERE id ='$reqId' AND status ='Comfirmed'";
         $val = $this->get_value_query_db($sql);
+        if ($val) return $val;
+        return false;
+    }
+
+    public function getReqStatus($reqId) {
+        $table_name=$this->get_requests_table_name();
+        $sql= "SELECT status AS val FROM $table_name WHERE id ='$reqId'";
+        $val = $this->get_value_query_db($sql);
+        echo $sql;
         if ($val) return $val;
         return false;
     }

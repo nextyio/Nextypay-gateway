@@ -12,8 +12,8 @@ class NextypaySetup {
         $table_name = $this->merchants_table_name;
         $sql="
         CREATE TABLE IF NOT EXISTS " . "$table_name" . "(
-            mid mediumint(20) NOT NULL default 1,
-            wallet char(50) NOT NULL,
+            mid mediumint(20) default 1,
+            wallet char(50) ,
             name char(50),
             url char(50),
             email char(50),
@@ -21,38 +21,38 @@ class NextypaySetup {
             totalAmount mediumint(20) DEFAULT 0,
             publicKey char(50),
             privateKey char(50),
-            comfirmAmount decimal(60,0) NOT NULL,
+            comfirmAmount decimal(60,0) ,
             status enum('Pending', 'Comfirmed', 'Accepted'),
 
             PRIMARY KEY (wallet)
         ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
         $npdb->query($sql);
     }
-    // amount mediumint(20) NOT NULL,
-    // transfered mediumint(20) NOT NULL DEFAULT 0,
-    //currency char(10) NOT NULL,
+    // amount mediumint(20) ,
+    // transfered mediumint(20)  DEFAULT 0,
+    //currency char(10) ,
     public function create_requests_table_db(){
         global $npdb;
         $table_name = $this->requests_table_name;
         $sql="
         CREATE TABLE IF NOT EXISTS " . "$table_name" . "(
-            id mediumint(20) NOT NULL AUTO_INCREMENT,
-            extraData text NOT NULL,
-            callbackUrl text NOT NULL,
+            id mediumint(20) AUTO_INCREMENT,
+            extraData text ,
+            callbackUrl text ,
             shopId mediumint(20),
             orderId mediumint(20),
-            returnUrl text NOT NULL,
-            ntyAmount decimal(60,0) NOT NULL,
+            returnUrl text ,
+            ntyAmount decimal(60,0) ,
             minBlockDistance mediumint(10) DEFAULT 0,
             startTime datetime,
             endTime datetime,
             status enum('Pending', 'Paid', 'Comfirmed'),
 
             fromWallet char(50) DEFAULT NULL,
-            toWallet char(50) NOT NULL,
+            toWallet char(50) ,
 
             PRIMARY KEY (id),
-            wallet char(50) NOT NULL ,
+            wallet char(50)  ,
             FOREIGN KEY (wallet) REFERENCES merchants(wallet),
             UNIQUE (wallet, shopId, orderId)
         ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
@@ -64,13 +64,13 @@ class NextypaySetup {
         $table_name = $this->transactions_table_name;
         $sql="
         CREATE TABLE IF NOT EXISTS " . "$table_name" . "(
-            hash char(70) NOT NULL,
-            fromWallet char(50) NOT NULL,
-            toWallet char(50) NOT NULL ,FOREIGN KEY (toWallet) REFERENCES merchants(wallet),
-            ntyAmount decimal(60,0) NOT NULL,
+            hash char(70) ,
+            fromWallet char(50) ,
+            toWallet char(50)  ,FOREIGN KEY (toWallet) REFERENCES merchants(wallet),
+            ntyAmount decimal(60,0) ,
             gasUsed mediumint(20) DEFAULT NULL,
-            blockNumber mediumint(20) NOT NULL,
-            reqId mediumint(20) NOT NULL ,FOREIGN KEY (reqId)REFERENCES requests(id),
+            blockNumber mediumint(20) ,
+            reqId mediumint(20)  ,FOREIGN KEY (reqId)REFERENCES requests(id),
             status enum('Pending', 'Accepted'),
 
             PRIMARY KEY (hash)
@@ -83,7 +83,7 @@ class NextypaySetup {
         $table_name = "vars";
         $sql="
             CREATE TABLE IF NOT EXISTS " . $table_name. " (
-            id mediumint(9) NOT NULL PRIMARY KEY,
+            id mediumint(9)  PRIMARY KEY,
             maxBlock mediumint(9) 
             ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
         $npdb->query($sql);
