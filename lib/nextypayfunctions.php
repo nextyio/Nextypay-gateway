@@ -17,19 +17,19 @@ class Nextypayfunctions{
 
   public function getQRCode($walletAddress,$order_id,$order_total)
   {
-      $QRtext='{"walletaddress": "'.$walletAddress.'","uoid": "'.$order_id.'","amount": "'.$order_total.'"}  ';
-      $QRtext_hex="0x".$this->strToHex($QRtext);
-      $QRtextencode= urlencode ( $QRtext_hex );
+      $QRtext = '{"walletaddress": "' . $walletAddress . '","uoid": "' . $order_id . '","amount": "' . $order_total . '"}';
+      $QRtext_hex = "0x".$this->strToHex($QRtext);
+      $QRtextencode = urlencode($QRtext_hex);
       return $QRtextencode;
   }
 
   public function strToHex($string){
 
   	$hex = '';
-  	for ($i=0; $i<strlen($string); $i++){
+  	for ($i = 0; $i < strlen($string); $i++){
   		$ord = ord($string[$i]);
   		$hexCode = dechex($ord);
-  		$hex .= substr('0'.$hexCode, -2);
+  		$hex .= substr('0' . $hexCode, -2);
   	}
   	return strToLower($hex);
 
@@ -37,9 +37,9 @@ class Nextypayfunctions{
 
   public function hexToStr($hex){
 
-      $string='';
-      for ($i=0; $i < strlen($hex)-1; $i+=2){
-          $string .= chr(hexdec($hex[$i].$hex[$i+1]));
+      $string = '';
+      for ($i = 0; $i < strlen($hex) - 1; $i += 2){
+          $string .= chr(hexdec($hex[$i] . $hex[$i + 1]));
       }
       return $string;
 

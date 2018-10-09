@@ -1,4 +1,7 @@
 <?php
+    //require_once('template/header.html');
+?>
+<?php
     require_once('setting.php');
     require_once('lib/nextypaypos.php');
     $data = $_POST;

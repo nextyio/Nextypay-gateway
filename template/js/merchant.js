@@ -81,7 +81,7 @@ function statusWaiting(startTime,wallet,timeout,interval){
             if ((status == 'success') && (data != 'Pending')) {
                 var successMsg = 'Successful comfirmed!';
                 $("#infoText").text(successMsg);
-                $("#pkeyText").text('Key: ' + data);
+                $("#pkeyText").text(data);
                 $("#QRImg").hide();
                 $("#androidApp").hide();
                 $("#iosApp").hide();

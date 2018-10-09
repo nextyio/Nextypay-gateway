@@ -22,12 +22,31 @@ $data['org_app_no'] = 1;
 $data['barcode_no'] = 1;
 ?>
 <form id="virtualPos" action="<?php echo $url; ?>" target="_blank" method="post">
+<table>
 <?php
-    foreach ($data as $a => $b) {
-        echo '<input type="hidden" name="'.htmlentities($a).'" value="'.htmlentities($b).'">';
-    }
+    echo "<tr>";
+    echo "<td>";
+    echo 'PARAM';
+    echo "</td>";
+    echo "<td>";
+    echo "Value";
+    echo "</td>";
+    echo "</tr>";
+
+        foreach ($data as $key => $value) {
+            echo "<tr>";
+            echo "<td>";
+            echo $key;
+            echo "</td>";
+            echo "<td>";
+            echo '<input name="'.htmlentities($key).'" value="'.htmlentities($value).'">';
+            echo "</td>";
+            echo "</tr>";
+        }
 ?>
+</table>
+<button name='submit' type = 'submit'>submit</button>
 </form>
 <script type="text/javascript">
-    document.getElementById('virtualPos').submit();
+    //document.getElementById('virtualPos').submit();
 </script>

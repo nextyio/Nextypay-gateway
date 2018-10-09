@@ -173,6 +173,16 @@ class Nextypayupdatedb{
         return $result;
     }
 
+    public function getMidByWallet($_wallet) {
+        $wallet = strtolower($_wallet);
+        $table = $this->get_merchants_table_name();
+        $sql = "SELECT mid as val 
+                FROM $table
+                WHERE wallet = '$wallet'";
+        $result = $this->get_value_query_db($sql);
+        return $result;
+    }
+
     public function getNameByMid($mid) {
         $table = $this->get_merchants_table_name();
         $sql = "SELECT name as val 
@@ -250,8 +260,21 @@ class Nextypayupdatedb{
         return false;
     }
 
-    public function addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $amount, $currency, $ntyAmount, 
-                                $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) {
+    public function addRequest(
+                                $shopId, 
+                                $orderId, 
+                                $extraData, 
+                                $callbackUrl, 
+                                $returnUrl, 
+                                $amount, 
+                                $currency, 
+                                $ntyAmount, 
+                                $minBlockDistance, 
+                                $startTime, 
+                                $endTime, 
+                                $fromWallet, 
+                                $toWallet, 
+                                $wallet ) {
         $_wallet = strtolower($wallet);
         $_extraData = strtolower($extraData);
         $_fromWallet = strtolower($fromWallet);
@@ -267,7 +290,7 @@ class Nextypayupdatedb{
             ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$amount', '$currency' , '$_weiAmount', '$minBlockDistance', 
             'Pending', '$_fromWallet', '$_toWallet', '$_wallet', '$startTime', '$endTime')";
         //echo "adding request : <br>";
-        echo $sql;
+        //echo $sql;
         if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
         return $this->getReqId($shopId,$orderId,$wallet);
     }
@@ -281,7 +304,7 @@ class Nextypayupdatedb{
         $sql = "SELECT id as val FROM $table_name
                 WHERE toWallet = '$toWallet' AND extraData = '$extraData' AND status = 'Pending'
                 LIMIT 1";
-        echo $sql."<br>";
+        //echo $sql."<br>";
         $val = $this->get_value_query_db($sql);
         if (!$val) return -1;
         return $val;
@@ -307,14 +330,14 @@ class Nextypayupdatedb{
 
     public function searchMerchant($transaction, $fromWallet, $toWallet, $ntyAmount) {
         $_fromWallet = strtolower($fromWallet);
-        echo "<br>gatewayWallet = $this->_gatewayWallet from $fromWallet to $toWallet <br>";
+        //echo "<br>gatewayWallet = $this->_gatewayWallet from $fromWallet to $toWallet <br>";
         if (strtolower($this->_gatewayWallet) != strtolower($toWallet)) return false;
         $table = $this->get_merchants_table_name();
         //check requests, extraData = extraData, wallet = toWallet return request id
         $sql = "UPDATE $table
                 SET status='Comfirmed' 
                 WHERE status = 'Pending' AND comfirmAmount = '$ntyAmount' AND wallet= '$_fromWallet' ";
-        echo "<br>$sql <br>";
+        //echo "<br>$sql <br>";
         return $this->query_db($sql);
     }
 
@@ -383,18 +406,18 @@ class Nextypayupdatedb{
             join $rTable on $tTable.reqId = $rTable.id 
             SET $tTable.status='Accepted' 
             WHERE $tTable.status= 'Pending' AND $tTable.blockNumber + $rTable.minBlockDistance < $currentBlock";
-        echo "<br>" . $sql;
+        //echo "<br>" . $sql;
         $this->query_db($sql);
     }
 
     function updateRequests() {
-        echo "<br> Updating Requests <br>";
+        //echo "<br> Updating Requests <br>";
         $tTable = $this->get_transactions_table_name();
         $rTable = $this->get_requests_table_name();
         $sql = "UPDATE $rTable 
                 SET status = 'Paid'
                 WHERE status='Pending' AND ntyAmount <= GET_TRANSFERED(id)";
-        echo $sql;
+        //echo $sql;
         $result = $this->query_db($sql);
     }
 
@@ -404,13 +427,13 @@ class Nextypayupdatedb{
         $sql = "UPDATE $rTable 
                 SET status = 'Comfirmed'
                 WHERE id = '$reqId'";
-                echo $sql;
+        //echo $sql;
         $result = $this->query_db($sql);
     }
 
     private function callback($reqId, $privateKey, $callbackUrl, $shopId, $orderId, $status, $extraData, $amount, $currency, $ntyAmount, $gas) {
         $hash = md5($orderId . $reqId . $amount . $privateKey);
-        echo $privateKey;
+        //echo $privateKey;
 		$fields = array(
 			'shopId' => $shopId,
             'orderId' => $orderId,
@@ -423,7 +446,7 @@ class Nextypayupdatedb{
             'gas' => $gas,
             'success' => true
         );
-        echo json_encode($fields);
+        //echo json_encode($fields);
         /*
         $secretKey = $nextypayParams['secretKey'];
 if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
@@ -449,8 +472,8 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         
         $result = curl_exec($ch);
-        echo $result;
-        echo 'test <br>';
+        //echo $result;
+        //echo 'test <br>';
         curl_close($ch);
         
         return $result;
@@ -468,7 +491,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
         $table_name=$this->get_requests_table_name();
         $sql= "SELECT status AS val FROM $table_name WHERE id ='$reqId'";
         $val = $this->get_value_query_db($sql);
-        echo $sql;
+        //echo $sql;
         if ($val) return $val;
         return false;
     }
@@ -482,7 +505,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
         $rTable = $this->get_requests_table_name();
         $sql = "SELECT id, extraData, callbackUrl, shopId, orderId, amount, currency, ntyAmount, wallet FROM $rTable
                 WHERE status = 'Paid' "; 
-        echo $sql;
+        //echo $sql;
         $result = $this->get_values_query_db($sql);
         while($row = mysqli_fetch_assoc($result)) {
             $reqId = $row['id'];
@@ -500,7 +523,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
             $privateKey = $this->getMerchantKey($wallet);
             // echo "<br> id " . $row['id'] . "<br>";
             // echo "<br> extraData " . $row['extraData'] . "<br>";
-            echo "<br> callbackUrl " . $row['callbackUrl'] . "<br>";
+            //echo "<br> callbackUrl " . $row['callbackUrl'] . "<br>";
             $response = $this->callback($reqId, 
                                         $privateKey, 
                                         $callbackUrl, 
@@ -526,7 +549,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
         $this->updateTransactions();
         $this->updateRequests();
         $this->comfirmRequests();
-        echo "last Block loaded : ". $this->getMaxBlock() . "<br>";
+        //echo "last Block loaded : ". $this->getMaxBlock() . "<br>";
         $total=$this->_blocks_loaded_each_request;
         //scan from this block number
         $from = $this->getMaxBlock() + 1;

@@ -17,10 +17,10 @@ class Nextypayblockchain
 		
 		echo $url;
 		$fields = array(
-		'jsonrpc' => "2.0",
-		'method' => 'eth_blockNumber',
-		'params' => [],
-		'id' => 100,
+		'jsonrpc' 	=> "2.0",
+		'method' 	=> 'eth_blockNumber',
+		'params' 	=> [],
+		'id' 		=> 100,
 		);
 		$data_string = json_encode($fields);
 		$ch = curl_init($url);
@@ -38,10 +38,10 @@ class Nextypayblockchain
 
 	public function get_block_by_hash($url,$block_hash){
 		$fields = array(
-			'jsonrpc' => "2.0",
-			'method' => 'eth_getBlockByHash',
-			'params' => [$block_hash,true],
-			'id' => 1,
+			'jsonrpc' 	=> "2.0",
+			'method' 	=> 'eth_getBlockByHash',
+			'params' 	=> [$block_hash,true],
+			'id' 		=> 1,
 		);
 		$data_string = json_encode($fields);
 
@@ -65,10 +65,10 @@ class Nextypayblockchain
 		//Debug
 		echo "get block from $url, block number " . hexdec($block_number) . "<br>";
 		$fields = array(
-			'jsonrpc' => "2.0",
-			'method' => 'eth_getBlockByNumber',
-			'params' => [$block_number,true],
-			'id' => 1,
+			'jsonrpc'	=> "2.0",
+			'method' 	=> 'eth_getBlockByNumber',
+			'params' 	=> [$block_number,true],
+			'id' 		=> 1,
 		);
 
 		$data_string = json_encode($fields);

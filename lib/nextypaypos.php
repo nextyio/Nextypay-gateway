@@ -1,10 +1,10 @@
 <?php 
 function autofill($str, $fixedLength) {
-    if ($fixedLength == 0) return '<br>'.$str;
+    if ($fixedLength == 0) return '<br>' . $str;
     $l = strlen($str);
     $result = $str;
     for ($i = 0; $i < $fixedLength - $l; $i++) $result = '0' . $result;
-    return '<br>'.$result;
+    return $result;
 }
 
 //request qr url
@@ -29,21 +29,21 @@ Response
 payment method (4) + res cd (4) + res msg (50) + out trade no (20)
 + res date (8) + res time (6) + qr url len (4) + qr url
 */
-    $response = autofill('1011', 4);
-    $response.= autofill($data['mid'], 12);
-    $response.= autofill($data['proto_ver'], 2);
-    $response.= autofill($data['trace_no'], 10);
-    $response.= autofill($data['pos_no'], 10);
-    $response.= autofill($data['payment_method'], 4);
-    $response.= autofill($data['res_cd'], 4);
-    $response.= autofill($data['res_msg'], 50);
-    $response.= autofill($data['out_trade_no'], 20);
-    $response.= autofill($data['res_date'], 8);
-    $response.= autofill($data['res_time'], 6);
-    $response.= autofill($data['qr_url_len'], 4);
-    $response.= autofill($data['qr_url'], 0);
+    $response  = autofill('1011', 4);
+    $response .= autofill($data['mid'], 12);
+    $response .= autofill($data['proto_ver'], 2);
+    $response .= autofill($data['trace_no'], 10);
+    $response .= autofill($data['pos_no'], 10);
+    $response .= autofill($data['payment_method'], 4);
+    $response .= autofill($data['res_cd'], 4);
+    $response .= autofill($data['res_msg'], 50);
+    $response .= autofill($data['out_trade_no'], 20);
+    $response .= autofill($data['res_date'], 8);
+    $response .= autofill($data['res_time'], 6);
+    $response .= autofill($data['qr_url_len'], 4);
+    $response .= autofill($data['qr_url'], 0);
 
-    return $response . '<br>';
+    return $response;
 }
 
 //request view trans status
@@ -68,27 +68,27 @@ function ReqAPV1_5010($data) {
         (10) + res time (6) + 11 cells free
     */
 
-    $response = autofill('5011', 4);
-    $response.= autofill($data['mid'], 12);
-    $response.= autofill($data['proto_ver'], 2);
-    $response.= autofill($data['trace_no'], 10);
-    $response.= autofill($data['pos_no'], 10);
-    $response.= autofill($data['payment_method'], 4);
-    $response.= autofill($data['svc_amt'], 10);
-    $response.= autofill($data['tax'], 10);
-    $response.= autofill($data['res_cd'], 4);
-    $response.= autofill($data['res_msg'], 50);
-    $response.= autofill($data['status_cd'], 4);
-    $response.= autofill($data['status_msg'], 50);
-    $response.= autofill($data['iss_cd'], 4);
-    $response.= autofill($data['iss_name'], 20);
-    $response.= autofill($data['aco_cd'], 4);
-    $response.= autofill($data['aco_nm'], 20);
-    $response.= autofill($data['app_date'], 8);
-    $response.= autofill($data['app_time'], 6);
-    $response.= autofill($data['app_no'], 10);
-    $response.= autofill($data['res_time'], 6);
+    $response  = autofill('5011', 4);
+    $response .= autofill($data['mid'], 12);
+    $response .= autofill($data['proto_ver'], 2);
+    $response .= autofill($data['trace_no'], 10);
+    $response .= autofill($data['pos_no'], 10);
+    $response .= autofill($data['payment_method'], 4);
+    $response .= autofill($data['svc_amt'], 10);
+    $response .= autofill($data['tax'], 10);
+    $response .= autofill($data['res_cd'], 4);
+    $response .= autofill($data['res_msg'], 50);
+    $response .= autofill($data['status_cd'], 4);
+    $response .= autofill($data['status_msg'], 50);
+    $response .= autofill($data['iss_cd'], 4);
+    $response .= autofill($data['iss_name'], 20);
+    $response .= autofill($data['aco_cd'], 4);
+    $response .= autofill($data['aco_nm'], 20);
+    $response .= autofill($data['app_date'], 8);
+    $response .= autofill($data['app_time'], 6);
+    $response .= autofill($data['app_no'], 10);
+    $response .= autofill($data['res_time'], 6);
     
-    return $response . '<br>';
+    return $response;
 }
 ?>
