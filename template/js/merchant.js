@@ -17,7 +17,8 @@ function addMerchant(wallet, merchantName, url, email){
   var isMobile = ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) );
   //alert('email='+ email);
   //alert(isMobile)
-  
+  $("#request").html(window.location.host + '/request.php');
+  $("#posRequest").html(window.location.host + '/posRequest.php (POS)');
   $.post("ajaxMerchant.php",
   {
     'service' : 'addMerchant',
