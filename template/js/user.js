@@ -24,7 +24,7 @@ function call_ajax(startTime,reqId,timeout,interval){
             'reqId': reqId
         },
         function(data, status){
-            //alert("Data: " + data + "\nStatus: " + status);
+            console.log(reqId + "Data: " + data + "\nStatus: " + status);
             if ((status == 'success') && (data)) {window.location.replace(data);} else
             {
               call_ajax(startTime,reqId,timeout,interval);

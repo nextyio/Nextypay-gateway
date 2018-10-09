@@ -76,10 +76,12 @@ function statusWaiting(startTime,wallet,timeout,interval){
             'wallet': wallet
         },
         function(data, status){
+            console.log(data);
             //alert("Data: " + data + "\nStatus: " + status);
-            if ((status == 'success') && (data == 'Comfirmed')) {
-                //alert(data);
-                $("#infoText").text('Successful comfirmed!');
+            if ((status == 'success') && (data != 'Pending')) {
+                var successMsg = 'Successful comfirmed!';
+                $("#infoText").text(successMsg);
+                $("#pkeyText").text('Key: ' + data);
                 $("#QRImg").hide();
                 $("#androidApp").hide();
                 $("#iosApp").hide();

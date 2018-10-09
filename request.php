@@ -18,13 +18,14 @@
     $shopId = isset($_POST['shopId']) ? $_POST['shopId'] : '';
     $orderId = isset($_POST['orderId']) ? $_POST['orderId'] : '';
     $minBlockDistance = isset($_POST['minBlockDistance']) ? $_POST['minBlockDistance'] : 1;
-    $toWallet = isset($_POST['toWallet']) ? $_POST['toWallet'] : '';
-    $wallet = isset($_POST['wallet']) ? $_POST['wallet'] : '';
+    $mid = isset($_POST['mid']) ? $_POST['mid'] : '';
+    $wallet = $_updatedb->getWalletByMid($mid);
+    $toWallet = (isset($_POST['toWallet']) && ($_POST['toWallet'])) ? $_POST['toWallet'] : $wallet;
     $amount = isset($_POST['amount']) ? $_POST['amount']: 0;
     $currency = isset($_POST['currency']) ? $_POST['currency']: 'nty';
     $_exchange->set_store_currency_code($currency);
     $ntyAmount = $_exchange->coinmarketcap_exchange($amount);
-    $ntyAmount = $amount; //TESTING
+    $ntyAmount = 1; //TESTING
 
     $startTime = NULL;
     $endTime = NULL;
@@ -33,19 +34,20 @@
     //$postFormat = $callbackUrl && $shopId && $orderId && $toWallet && $wallet && $ntyAmount;
 
     $QRText ='{"walletaddress":"'.$toWallet.'","uoid":"'.$orderId.'","amount":"'.$ntyAmount.'"}';
+    echo $QRText;
     $QRTextHex="0x".$_functions->strToHex($QRText);
     $extraData = $QRTextHex;
     $QRTextEncode= urlencode ( $QRText );
 
-    $reqId = $_updatedb->addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $ntyAmount, 
+    $reqId = $_updatedb->addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $amount, $currency, $ntyAmount, 
     $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) ;
 
-    $merchantName = "test Merchant Name";
+    $merchantName = isset($_POST['merchantName']) ? $_POST['merchantName']: $_updatedb->getNameByMid($mid);
 
     foreach ($_POST as $key => $value) {
         //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
-    if (isset($_POST['wallet']))
+    if ($reqId)
         require_once('template/request.html'); else require_once('template/error.html');
     require_once('template/footer.html')
 ?>

@@ -25,6 +25,12 @@ if ($_POST['service'] == 'addMerchant') {
 } else 
 if ($_POST['service'] == 'checkStatus') {
     $wallet = $_POST['wallet'];
-    echo $_updatedb->getMerchantStatus($wallet);
+    $status = $_updatedb->getMerchantStatus($wallet);
+    if ($status == 'Pending') {
+        echo $status;
+    } else {
+        $key = $_updatedb->getMerchantKey($wallet);
+        echo $key;
+    }
 }
 ?>

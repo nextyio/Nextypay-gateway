@@ -1,5 +1,4 @@
 <?php
-
 class Nextypayupdatedb{
     public static $instance;
     //inputs list
@@ -55,6 +54,43 @@ class Nextypayupdatedb{
         $this->_blocks_loaded_each_request = 30;
     }
 
+    ////////////////////API Key Generator
+    private function findRandom() {
+        $mRandom = rand(48, 122);
+        return $mRandom;
+    }
+    
+    /**
+     * Checks if $random equals ranges 48:57, 56:90, or 97:122.
+     * <p>
+     * This function is being used to filter $random so that when used in:
+     * '&#' . $random . ';' it will generate the ASCII characters for ranges
+     * 0:8, a-z (lowercase), or A-Z (uppercase).
+     * <p>
+     * @param int $mRandom Non-cryptographically generated random number.
+     * @return int 0 if not within range, else $random is returned. 
+     */
+    private function isRandomInRange($mRandom) {
+        if(($mRandom >=58 && $mRandom <= 64) ||
+                (($mRandom >=91 && $mRandom <= 96))) {
+            return 0;
+        } else {
+            return $mRandom;
+        }
+    }   
+    
+    //32 chars
+    private function APIKeyGen() {
+        $output = null;
+        for($loop = 0; $loop <= 31; $loop++) {
+            for($isRandomInRange = 0; $isRandomInRange === 0;){
+                $isRandomInRange = $this->isRandomInRange($this->findRandom());
+            }
+            $output .= html_entity_decode('&#' . $isRandomInRange . ';');
+        }
+        return strtolower($output);
+    }
+ 
     ////////////////////sql query DB,depending on Framework
 
     public function query_db($sql){
@@ -137,10 +173,20 @@ class Nextypayupdatedb{
         return $result;
     }
 
+    public function getNameByMid($mid) {
+        $table = $this->get_merchants_table_name();
+        $sql = "SELECT name as val 
+                FROM $table
+                WHERE mid = '$mid'";
+        $result = $this->get_value_query_db($sql);
+        return $result;
+    }
+
     public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions, $isMobile) {
         $_wallet = strtolower($wallet);
         $publicKey = 'test public key';
-        $privateKey = 'test private key';
+        $privateKey = 'Root123';
+        $privateKey = $this->APIKeyGen();
         $comfirmAmount = rand(1,10);
         $weiAmount = $comfirmAmount *1e18;
         $table_name = $this->get_merchants_table_name();
@@ -180,6 +226,14 @@ class Nextypayupdatedb{
         return false;
     }
 
+    public function getMerchantKey($wallet) {
+        $table_name=$this->get_merchants_table_name();
+        $sql= "SELECT privateKey AS val FROM $table_name WHERE wallet='$wallet'";
+        $result = $this->get_value_query_db($sql);
+        if ($result) return $result;
+        return false;
+    }
+
     private function requestExist($wallet, $shopId, $orderId) {
         $table_name=$this->get_requests_table_name();
         $sql= "SELECT id AS val FROM $table_name WHERE hash='$hash'";
@@ -196,7 +250,7 @@ class Nextypayupdatedb{
         return false;
     }
 
-    public function addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $ntyAmount, 
+    public function addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $amount, $currency, $ntyAmount, 
                                 $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) {
         $_wallet = strtolower($wallet);
         $_extraData = strtolower($extraData);
@@ -207,10 +261,10 @@ class Nextypayupdatedb{
 
         $table_name = $this->get_requests_table_name();
 
-        $sql = "INSERT INTO " . $table_name . "(shopId, orderId, extraData, callbackUrl, returnUrl, ntyAmount,
+        $sql = "INSERT INTO " . $table_name . "(shopId, orderId, extraData, callbackUrl, returnUrl, amount, currency, ntyAmount,
             minBlockDistance, status, fromWallet, toWallet, wallet, startTime, endTime) VALUES
 
-            ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$_weiAmount', '$minBlockDistance', 
+            ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$amount', '$currency' , '$_weiAmount', '$minBlockDistance', 
             'Pending', '$_fromWallet', '$_toWallet', '$_wallet', '$startTime', '$endTime')";
         //echo "adding request : <br>";
         echo $sql;
@@ -354,16 +408,29 @@ class Nextypayupdatedb{
         $result = $this->query_db($sql);
     }
 
-    private function callback($callbackUrl, $shopId, $orderId, $status, $extraData, $amount, $gas) {
+    private function callback($reqId, $privateKey, $callbackUrl, $shopId, $orderId, $status, $extraData, $amount, $currency, $ntyAmount, $gas) {
+        $hash = md5($orderId . $reqId . $amount . $privateKey);
+        echo $privateKey;
 		$fields = array(
 			'shopId' => $shopId,
-			'orderId' => $orderId,
-			'status' => $status,
+            'orderId' => $orderId,
+            'reqId' => $reqId,
+            'status' => $status,
+            'hash' => $hash,
+            'fee' => 0,
             'extraData' => $extraData,
             'amount' => $amount,
             'gas' => $gas,
             'success' => true
         );
+        echo json_encode($fields);
+        /*
+        $secretKey = $nextypayParams['secretKey'];
+if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
+    $transactionStatus = 'Hash Verification Failure';
+    $success = false;
+}
+*/
         
 
         $postvars='';
@@ -383,6 +450,7 @@ class Nextypayupdatedb{
         
         $result = curl_exec($ch);
         echo $result;
+        echo 'test <br>';
         curl_close($ch);
         
         return $result;
@@ -412,7 +480,7 @@ class Nextypayupdatedb{
 
     function comfirmRequests() {
         $rTable = $this->get_requests_table_name();
-        $sql = "SELECT id, extraData, callbackUrl, shopId, orderId, ntyAmount FROM $rTable
+        $sql = "SELECT id, extraData, callbackUrl, shopId, orderId, amount, currency, ntyAmount, wallet FROM $rTable
                 WHERE status = 'Paid' "; 
         echo $sql;
         $result = $this->get_values_query_db($sql);
@@ -422,14 +490,28 @@ class Nextypayupdatedb{
             $callbackUrl = $row['callbackUrl'];
             $shopId = $row['shopId'];
             $orderId = $row['orderId'];
-            $status = 'paid';
+            $status = 'Paid';
+            $amount = $row['amount'];
+            $currency = $row['currency'];
             $weiAmount = $this->getTransfered($reqId);
             $ntyAmount = $weiAmount *1e-18;
             $gas = $this->getGasUsed($reqId);
+            $wallet = $row['wallet'];
+            $privateKey = $this->getMerchantKey($wallet);
             // echo "<br> id " . $row['id'] . "<br>";
             // echo "<br> extraData " . $row['extraData'] . "<br>";
             echo "<br> callbackUrl " . $row['callbackUrl'] . "<br>";
-            $response = $this->callback($callbackUrl, $shopId, $orderId, $status, $extraData,$ntyAmount,$gas);
+            $response = $this->callback($reqId, 
+                                        $privateKey, 
+                                        $callbackUrl, 
+                                        $shopId, 
+                                        $orderId, 
+                                        $status, 
+                                        $extraData, 
+                                        $amount,
+                                        $currency,
+                                        $ntyAmount,
+                                        $gas);
             //echo $response;
             if ($this->callbackVerify($response)) $this->reqComplete($reqId);
         }

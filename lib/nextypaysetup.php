@@ -42,6 +42,8 @@ class NextypaySetup {
             shopId mediumint(20),
             orderId mediumint(20),
             returnUrl text ,
+            amount text ,
+            currency text ,
             ntyAmount decimal(60,0) ,
             minBlockDistance mediumint(10) DEFAULT 0,
             startTime datetime,
