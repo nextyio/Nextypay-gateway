@@ -2,16 +2,16 @@
 require_once('setting.php');
 require_once('lib/nextypaysetup.php');
 
-$npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
-$setup = new Nextypaysetup();
+$npdb   = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
+$setup  = new Nextypaysetup();
 $setup->uninstall();
-$npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
+$npdb   = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
 $setup->install();
 
-$_db_prefix='';
-$_updatedb=new Nextypayupdatedb;
+$_db_prefix = '';
+$_updatedb  = new Nextypayupdatedb;
 $_blockchain= new Nextypayblockchain;
-$_functions= new Nextypayfunctions;
+$_functions = new Nextypayfunctions;
 
 $_url = $mainnet;
 
