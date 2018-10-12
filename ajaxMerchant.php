@@ -30,8 +30,9 @@ if ($_POST['service'] == 'checkStatus') {
         echo $status;
     } else {
         $key = $_updatedb->getMerchantKey($wallet);
+        $apiKey = $_updatedb->getApiKey($wallet);
         $mid = $_updatedb->getMidByWallet($wallet);
-        echo "mid : $mid API key : $key";
+        echo "mid : $mid secret key : $key api key : $apiKey";
     }
 }
 ?>

@@ -194,9 +194,8 @@ class Nextypayupdatedb{
 
     public function addMerchant($wallet, $merchantName, $url, $email, $gatewayWallet, $_functions, $isMobile) {
         $_wallet = strtolower($wallet);
-        $publicKey = 'test public key';
-        $privateKey = 'Root123';
-        $privateKey = $this->APIKeyGen();
+        $privateKey = $this->APIKeyGen(); // secret key
+        $publicKey = $this->APIKeyGen(); //api key
         $comfirmAmount = rand(1,10);
         $weiAmount = $comfirmAmount *1e18;
         $table_name = $this->get_merchants_table_name();
@@ -239,6 +238,22 @@ class Nextypayupdatedb{
     public function getMerchantKey($wallet) {
         $table_name=$this->get_merchants_table_name();
         $sql= "SELECT privateKey AS val FROM $table_name WHERE wallet='$wallet'";
+        $result = $this->get_value_query_db($sql);
+        if ($result) return $result;
+        return false;
+    }
+
+    public function getApiKey($wallet) {
+        $table_name=$this->get_merchants_table_name();
+        $sql= "SELECT publicKey AS val FROM $table_name WHERE wallet='$wallet'";
+        $result = $this->get_value_query_db($sql);
+        if ($result) return $result;
+        return false;
+    }
+
+    public function getApiKeyByMid($mid) {
+        $table_name=$this->get_merchants_table_name();
+        $sql= "SELECT publicKey AS val FROM $table_name WHERE mid='$mid'";
         $result = $this->get_value_query_db($sql);
         if ($result) return $result;
         return false;

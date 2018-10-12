@@ -20,6 +20,8 @@
     $minBlockDistance = isset($_POST['minBlockDistance']) ? $_POST['minBlockDistance'] : 1;
     $mid = isset($_POST['mid']) ? $_POST['mid'] : '';
     $wallet = $_updatedb->getWalletByMid($mid);
+    $apiKey = $_updatedb->getApiKeyByMid($mid);
+    if ($apiKey != $_POST['apiKey']) {require_once('template/error.html'); exit;}
     $toWallet = (isset($_POST['toWallet']) && ($_POST['toWallet'])) ? $_POST['toWallet'] : $wallet;
     $amount = isset($_POST['amount']) ? $_POST['amount']: 0;
     $currency = isset($_POST['currency']) ? $_POST['currency']: 'nty';
