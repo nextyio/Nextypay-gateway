@@ -497,6 +497,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
     }
 
     function callbackVerify($response) {
+        echo $response;
         if ($response == 'Ok') return true;
         return false;
     }
@@ -511,6 +512,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
             $reqId = $row['id'];
             $extraData = $row['extraData'];
             $callbackUrl = $row['callbackUrl'];
+            echo $callbackUrl;
             $shopId = $row['shopId'];
             $orderId = $row['orderId'];
             $status = 'Paid';
@@ -535,7 +537,6 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
                                         $currency,
                                         $ntyAmount,
                                         $gas);
-            //echo $response;
             if ($this->callbackVerify($response)) $this->reqComplete($reqId);
         }
     }

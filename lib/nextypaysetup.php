@@ -13,13 +13,13 @@ class NextypaySetup {
         $table = $this->merchantsTable;
         $sql =  "
                 CREATE TABLE IF NOT EXISTS " . "$table" . "(
-                    mid mediumint(20) default 1,
+                    mid bigint(20) default 1,
                     wallet char(50) ,
                     name char(50),
                     url char(50),
                     email char(50),
-                    totalRequest mediumint(20) DEFAULT 0,
-                    totalAmount mediumint(20) DEFAULT 0,
+                    totalRequest bigint(20) DEFAULT 0,
+                    totalAmount bigint(20) DEFAULT 0,
                     publicKey char(50),
                     privateKey char(50),
                     comfirmAmount decimal(60,0) ,
@@ -36,16 +36,16 @@ class NextypaySetup {
         $table = $this->requestsTable;
         $sql = "
                 CREATE TABLE IF NOT EXISTS " . "$table" . "(
-                    id mediumint(20) AUTO_INCREMENT,
+                    id bigint(20) AUTO_INCREMENT,
                     extraData text ,
                     callbackUrl text ,
-                    shopId mediumint(20),
-                    orderId mediumint(20),
+                    shopId bigint(20),
+                    orderId bigint(20),
                     returnUrl text ,
                     amount text ,
                     currency text ,
                     ntyAmount decimal(60,0) ,
-                    minBlockDistance mediumint(10) DEFAULT 0,
+                    minBlockDistance bigint(10) DEFAULT 0,
                     startTime datetime,
                     endTime datetime,
                     status enum('Pending', 'Paid', 'Comfirmed'),
@@ -71,9 +71,9 @@ class NextypaySetup {
                     fromWallet char(50) ,
                     toWallet char(50)  ,FOREIGN KEY (toWallet) REFERENCES merchants(wallet),
                     ntyAmount decimal(60,0) ,
-                    gasUsed mediumint(20) DEFAULT NULL,
-                    blockNumber mediumint(20) ,
-                    reqId mediumint(20)  ,FOREIGN KEY (reqId)REFERENCES requests(id),
+                    gasUsed bigint(20) DEFAULT NULL,
+                    blockNumber bigint(20) ,
+                    reqId bigint(20)  ,FOREIGN KEY (reqId)REFERENCES requests(id),
                     status enum('Pending', 'Accepted'),
 
                     PRIMARY KEY (hash)
@@ -86,8 +86,8 @@ class NextypaySetup {
         $table = $this->varsTable;
         $sql = "
                 CREATE TABLE IF NOT EXISTS " . $table. " (
-                id mediumint(9)  PRIMARY KEY,
-                maxBlock mediumint(9) 
+                id bigint(9)  PRIMARY KEY,
+                maxBlock bigint(9) 
                 ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
 
         $npdb->query($sql);
@@ -97,7 +97,7 @@ class NextypaySetup {
     private function createFunction() {
         global $npdb;
         $sql = "
-                CREATE FUNCTION GET_TRANSFERED (REQUESTID mediumint ) RETURNS decimal(60,0)  RETURN (
+                CREATE FUNCTION GET_TRANSFERED (REQUESTID bigint ) RETURNS decimal(60,0)  RETURN (
                 SELECT COALESCE(SUM(ntyAmount), 0)
                 FROM $this->transactionsTable
                 WHERE reqId = REQUESTID AND status = 'Accepted')";
