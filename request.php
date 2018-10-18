@@ -1,5 +1,5 @@
 <?php
-    require_once('template/header.html');
+    require_once('template/html/header.html');
 ?>
     <link rel="stylesheet" href="template/css/request.css"/>  
 <?php
@@ -36,7 +36,7 @@
     //$postFormat = $callbackUrl && $shopId && $orderId && $toWallet && $wallet && $ntyAmount;
 
     $QRText ='{"walletaddress":"'.$toWallet.'","uoid":"'.$orderId.'","amount":"'.$ntyAmount.'"}';
-    echo $QRText;
+    //echo $QRText;
     $QRTextHex="0x".$_functions->strToHex($QRText);
     $extraData = $QRTextHex;
     $QRTextEncode= urlencode ( $QRText );
@@ -50,8 +50,8 @@
         //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
     if ($reqId)
-        require_once('template/request.html'); else require_once('template/error.html');
-    require_once('template/footer.html')
+        require_once('template/html/request.html'); else require_once('template/html/error.html');
+    require_once('template/html/footer.html')
 ?>
     <script>
         call_ajax(new Date(), <?php echo $reqId; ?>,600,3 );
