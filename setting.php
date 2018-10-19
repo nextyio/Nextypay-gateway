@@ -41,4 +41,11 @@ $_updatedb->set_url($_url);
 $_updatedb->set_connection($npdb);
 $_updatedb->set_includes($_blockchain,$_functions);
 $_updatedb->set_gatewayWallet($gatewayWallet);
+
+function render($page) {
+    $htmlFolder = 'template/html/';
+    require_once($htmlFolder . 'header.html');
+    require_once($htmlFolder . $page);
+    require_once($htmlFolder . 'footer.html');
+}
 ?>
