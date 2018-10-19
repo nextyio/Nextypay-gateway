@@ -1,17 +1,10 @@
 <?php
+    require_once('setting.php');
+    require_once('guard.php');
     require_once('template/html/header.html');
 ?>
     <link rel="stylesheet" href="template/css/request.css"/>  
 <?php
-    require_once('setting.php');
-
-    $_url = $mainnet;
-
-    $npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
-
-    $_updatedb->set_url($_url);
-    $_updatedb->set_connection($npdb);
-    $_updatedb->set_includes($_blockchain,$_functions); 
 
     $callbackUrl = isset($_POST['callbackUrl']) ? utf8_decode(urldecode($_POST['callbackUrl'])) : '';
     $returnUrl = isset($_POST['returnUrl']) ? utf8_decode(urldecode($_POST['returnUrl'])) : '';

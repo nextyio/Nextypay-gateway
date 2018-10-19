@@ -1,17 +1,18 @@
 <div class="container">
 <div class="col-md-6 col-md-offset-3">
-    <form class="form-signin">
+    <form class="form-signin" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <h2 class="form-signin-heading">Login Form</h2>
+        <p style="color: red"><?php if (isset($_POST['mid']) && (!$success)) echo 'Invalid Inputs!' ?></p>
         <label for="inputEmail" class="sr-only">Wallet Address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Wallet Address" required autofocus>
+        <input type="number" name='mid' id="mid" class="form-control" placeholder="Merchant Id (mid)" required autofocus>
         <label for="inputPassword" class="sr-only">API Key</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="API Key" required>
+        <input type="password" name='apiKey' id="apiKey" class="form-control" placeholder="API Key" required>
         <div class="checkbox">
         <label>
             <input type="checkbox" value="remember-me"> Remember me
         </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
     </form>
 </div>
 </div> <!-- /container -->

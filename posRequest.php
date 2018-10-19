@@ -1,14 +1,8 @@
 <?php
     require_once('setting.php');
+    require_once('guard.php');
     require_once('lib/nextypaypos.php');
     $data = $_POST;
-    $_url = $mainnet;
-
-    $npdb = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
-
-    $_updatedb->set_url($_url);
-    $_updatedb->set_connection($npdb);
-    $_updatedb->set_includes($_blockchain,$_functions); 
 
     $proto_fg = isset($_POST['proto_fg']) ? $_POST['proto_fg'] : null;
     $reqCode = $proto_fg;

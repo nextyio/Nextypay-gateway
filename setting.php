@@ -3,7 +3,22 @@ error_reporting(E_ERROR | E_PARSE);
 
 //merchants register validator
 $gatewayWallet = '0x6f53c8502bb884775e422c7c34be681554cee2ba';
+
 require_once('lib/npdb.php');
+$DBUSER     = "root";
+$DBPASSWORD = "Root123!";
+$DBNAME     = "nextypay";
+$DBHOST     = "localhost";
+
+/* Attempt to connect to MySQL database */
+$link = mysqli_connect($DBHOST , $DBUSER, $DBPASSWORD, $DBNAME);
+ 
+// Check connection
+if($link === false){
+    die("ERROR: Could not connect. " . mysqli_connect_error());
+}
+$npdb       = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);
+
 require_once('lib/nextypayblockchain.php');
 require_once('lib/nextypayexchange.php');
 require_once('lib/nextypayfunctions.php');
@@ -19,8 +34,11 @@ $_functions= new Nextypayfunctions;
 $testnet    = "http://125.212.250.61:11111";
 $local      = "http://127.0.0.1:8545";
 $mainnet    = "http://13.228.68.50:8545";
-$DBUSER     = "root";
-$DBPASSWORD = "Root123!";
-$DBNAME     = "nextypay";
-$DBHOST     = "localhost";
+
+$_url = $mainnet;
+
+$_updatedb->set_url($_url);
+$_updatedb->set_connection($npdb);
+$_updatedb->set_includes($_blockchain,$_functions);
+$_updatedb->set_gatewayWallet($gatewayWallet);
 ?>

@@ -1,6 +1,7 @@
 <?php
 //exit; //uncomment for production version or move to control folder
 require_once('setting.php');
+require_once('guard.php');
 require_once('lib/nextypaysetup.php');
 
 $npdb   = new npdb($DBUSER, $DBPASSWORD, $DBNAME, $DBHOST);

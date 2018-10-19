@@ -1,3 +1,12 @@
+<?php 
+$loggedin = (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true);
+if ($loggedin) { 
+  $logUrl = 'logout.php'; $logText = 'Logout'; $logColor = 'color : red';
+} 
+else {
+  $logUrl = 'login.php'; $logText = 'Login'; $logColor = '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -52,7 +61,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="login.php">Login</a></li>
+                <li class="active"><a href='<?php echo $logUrl;?>' style='<?php echo $logColor; ?>'><?php echo $logText;?></a></li>
                 <li><a href="https://nexty.io/nexty-whitepaper.pdf">About</a></li>
                 <li><a href="https://t.me/nexty_io">Contact</a></li>
                 <li class="dropdown">

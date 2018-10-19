@@ -1,4 +1,6 @@
 <?php
+    require_once('setting.php');
+    require_once('guard.php');
 // Initialize the session
 session_start();
  
