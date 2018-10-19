@@ -36,3 +36,4 @@ function isSuccess(apiKey) {
         $('#newApiKey').text(apiKey);
     }
 }
+

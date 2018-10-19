@@ -16,12 +16,8 @@ if ($posted) {
     $secretKey      = $_POST['secretKey'];
     $newApiKey      = $_updatedb->getNewApiKey($walletAddress, $secretKey);
 }
-require_once('template/html/header.html');
-require_once('template//html/changeApiKey.html'); 
+render('changeApikey.html');
 ?>
-<script>
-    isSuccess('<?php echo $newApiKey ?>');
+<script >
+    isSuccess('<?php echo $newApiKey; ?>');    
 </script>
-<?php
-require_once('template/html/footer.html');
-?>
