@@ -7,7 +7,7 @@
     */
     require_once('setting.php');
     require_once('guard.php');
-    require_once('logout.php');
+    require_once('killSession.php');
     require_once('template/html/header.html');
     require_once('template//html/register.html'); 
     require_once('template/html/footer.html')
