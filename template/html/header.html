@@ -69,7 +69,14 @@ else {
                   <ul class="dropdown-menu">
                     <li role="separator" class="divider"></li>
                     <li class="dropdown-header">Gateway</li>
-                      <li><a href="register.php">Register</a></li>
+                      <li><a href="register.php">Register</a></li> 
+                      <?php 
+                      if ($loggedin) {
+                      ?>
+                        <li><a href="changeApiKey.php">New API Key</a></li> 
+                      <?php
+                      };
+                      ?>
                     <li role="separator" class="divider"></li>
                     <li class="dropdown-header">Nexty Platform</li>
                       <li><a href="https://nexty.io">Homepage</a></li>
