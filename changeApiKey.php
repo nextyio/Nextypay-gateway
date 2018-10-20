@@ -14,7 +14,10 @@ if ($posted) {
     $newApiKey = $_updatedb->getNewApiKey($walletAddress, $seed, $hash);
     if ($newApiKey > 0) {require_once('killSession.php');} //logout after update API Key
 }
-render('changeApikey.html');
+require_once('template/html/header.html');
+require_once('template/html/changeApikey.html'); 
+require_once('template/html/footer.html');
+//render('changeApikey.html');
 ?>
 <script >
     isSuccess('<?php echo $newApiKey; ?>');    
