@@ -44,7 +44,7 @@ $_updatedb->set_gatewayWallet($gatewayWallet);
 
 function render($page) {
     $htmlFolder = 'template/html/';
-    echo $htmlFolder.$page;
+    //echo $htmlFolder.$page;
     require_once($htmlFolder . 'header.html');
     require_once($htmlFolder . $page);
     require_once($htmlFolder . 'footer.html');
