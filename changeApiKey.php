@@ -20,5 +20,4 @@ require_once('template/html/footer.html');
 //render('changeApikey.html');
 ?>
 <script >
-    isSuccess('<?php echo $newApiKey; ?>');    
 </script>
