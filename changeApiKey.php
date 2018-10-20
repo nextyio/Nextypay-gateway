@@ -15,7 +15,7 @@ if ($posted) {
     if ($newApiKey > 0) {require_once('killSession.php');} //logout after update API Key
 }
 require_once('template/html/header.html');
-require_once('template/html/changeApikey.html'); 
+//require_once('template/html/changeApikey.html'); 
 require_once('template/html/footer.html');
 //render('changeApikey.html');
 ?>
