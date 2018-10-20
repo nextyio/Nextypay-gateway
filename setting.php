@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR | E_PARSE);
+//error_reporting(E_ERROR | E_PARSE);
 
 //merchants register validator
 $gatewayWallet = '0x6f53c8502bb884775e422c7c34be681554cee2ba';
