@@ -18,10 +18,11 @@ if ($_POST['service'] == 'checkStatus') {
     if ($status == 'Pending') {
         echo $status;
     } else {
-        $key = $_updatedb->getMerchantKey($wallet);
+        $pKey = $_updatedb->getMerchantKey($wallet);
         $apiKey = $_updatedb->getApiKey($wallet);
         $mid = $_updatedb->getMidByWallet($wallet);
-        echo "mid : $mid secret key : $key api key : $apiKey";
+        //echo "mid : $mid secret key : $key api key : $apiKey";
+        echo $mid . " " . $apiKey . " " . $pKey;
     }
 }
 ?>

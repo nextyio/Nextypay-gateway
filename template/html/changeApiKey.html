@@ -1,3 +1,4 @@
+<script src="template/js/md5.js"></script>
 <script src="template/js/validator.js"></script>
 <script src="template/js/genKey.js"></script>
 <link rel="stylesheet" href="template/css/register.css">
@@ -33,21 +34,24 @@
 
 
 
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
+    <form id = "requestForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
         <div class="form-group">
             <label>Wallet address</label>
             <input type="text" name = "walletAddress" id="wallet" placeholder="Enter Wallet Address Here.." class="form-control">
         </div>
 
-        <div class="form-group">
-            <label>Secret Key</label>
-            <input type="password" name="secretKey" id = "secretKey" placeholder="Enter Secret Key Here.." class="form-control">
-            <span class="help-block"><?php echo $password_err; ?></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" onclick = "return keyRequest()" class="btn btn-primary" value="Submit">
-            <a class="btn btn-link" href="welcome.php">Cancel</a>
-        </div>
+        <input id = "seed" name = "seed" type = "hidden"/>
+        <input id = "hash" name = "hash" type = "hidden"/>
     </form>
+
+    <div class="form-group">
+        <label>Secret Key (used on clientside for encrypt only)</label>
+        <input type="password" name="secretKey" id = "secretKey" placeholder="Enter Secret Key Here.." class="form-control">
+        <span class="help-block"><?php echo $password_err; ?></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" onclick = "return keyRequest()" class="btn btn-primary" value="Submit">
+        <a class="btn btn-link" href="welcome.php">Cancel</a>
+    </div>
 </div> 
 </div>

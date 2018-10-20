@@ -251,14 +251,23 @@ class Nextypayupdatedb{
         return false;
     }
 
-    public function getNewApiKey($wallet, $secretKey) {
+    private function getPrivateKey($wallet, $seed, $hash) {
+        $table_name=$this->get_merchants_table_name();
+        $sql= "SELECT privateKey AS val FROM $table_name WHERE wallet='$wallet'";
+        $pKey = $this->get_value_query_db($sql);
+        if (!$pKey) return false;
+        $str = $wallet.$pKey.$seed;
+        if (md5(strtolower($str)) != $hash) return false;
+        return $pKey;
+    }
+
+    public function getNewApiKey($wallet, $seed, $hash) {
+        $pKey = $this->getPrivateKey($wallet, $seed, $hash);
+        if (!$pKey) return 0;
         $table_name=$this->get_merchants_table_name();
         $_wallet = strtolower($wallet);
-        $sql= "SELECT mid AS val FROM $table_name WHERE wallet='$_wallet' AND privateKey='$secretKey'";
-        $mid = $this->get_value_query_db($sql);
-        if ($mid == 0) return 0;
         $newApiKey = $this->APIKeyGen();
-        $sql = "UPDATE " . $table_name . " SET publicKey = '$newApiKey' WHERE mid='$mid'";
+        $sql = "UPDATE " . $table_name . " SET publicKey = '$newApiKey' WHERE wallet='$_wallet' AND privateKey='$pKey'";
         $result = $this->query_db($sql);
         return $newApiKey;
     }

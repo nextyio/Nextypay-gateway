@@ -11,6 +11,7 @@ function countInSecond(startTime,endTime) {
 }
 
 function addMerchant(wallet, merchantName, url, email){
+var path = location.href.substring(0,location.href.lastIndexOf('/')+1);
   console.log('adding new Merchant');
   var wallet = $('#wallet').val();
   var merchantName = $('#merchantName').val();
@@ -32,6 +33,7 @@ function addMerchant(wallet, merchantName, url, email){
   validPhone ? $('#phoneError').hide() : $('#phoneError').show();
 
   if (validInputs)
+  //if (true)
   {
     $('#popup').modal('toggle')
     $("#request").html('http://' + window.location.host + '/nextypay-gateway/request.php');
@@ -97,12 +99,18 @@ function statusWaiting(startTime,wallet,timeout,interval){
             console.log(data);
             //alert("Data: " + data + "\nStatus: " + status);
             if ((status == 'success') && (data != 'Pending')) {
-                var successMsg = 'Successful comfirmed!';
-                $("#infoText").text(successMsg);
-                $("#pkeyText").text(data);
-                $("#QRImg").hide();
-                $("#androidApp").hide();
-                $("#iosApp").hide();
+                //new Keys generated
+                //data = mid + " " + apiKey + " " + pKey
+                console.log(data);
+                var datas = data.split(" ");
+                var path = location.href.substring(0,location.href.lastIndexOf('/')+1);
+                $('#successNoti').show();
+                $('#mid').text(datas[0]);
+                $('#apiKey').text(datas[1]);
+                $('#secretKey').text(datas[2]);
+                $('#requestUrl').text(path + "request.php");
+                $('#posRequestUrl').text(path + "posRequest.php");
+                $('#popup').modal('hide');
             } else
             {
                 statusWaiting(startTime,wallet,timeout,interval);

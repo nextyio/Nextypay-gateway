@@ -55,7 +55,8 @@ class NextypaySetup {
 
                     PRIMARY KEY (id),
                     wallet char(50)  ,
-                    FOREIGN KEY (wallet) REFERENCES merchants(wallet),
+                    FOREIGN KEY (wallet) REFERENCES merchants(wallet)
+                    ON DELETE CASCADE ON UPDATE CASCADE,
                     UNIQUE (wallet, shopId, orderId)
                 ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
 
@@ -69,11 +70,13 @@ class NextypaySetup {
                 CREATE TABLE IF NOT EXISTS " . "$table" . "(
                     hash char(70) ,
                     fromWallet char(50) ,
-                    toWallet char(50)  ,FOREIGN KEY (toWallet) REFERENCES merchants(wallet),
+                    toWallet char(50) ,
                     ntyAmount decimal(60,0) ,
                     gasUsed bigint(20) DEFAULT NULL,
                     blockNumber bigint(20) ,
-                    reqId bigint(20)  ,FOREIGN KEY (reqId)REFERENCES requests(id),
+                    reqId bigint(20)  ,
+                    FOREIGN KEY (reqId)REFERENCES requests(id) 
+                    ON DELETE CASCADE ON UPDATE CASCADE,
                     status enum('Pending', 'Accepted'),
 
                     PRIMARY KEY (hash)

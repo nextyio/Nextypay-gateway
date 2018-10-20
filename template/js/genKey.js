@@ -1,5 +1,3 @@
-
-//////////////////////////////////////////
 function countInSecond(startTime,endTime) {
   var timeDiff = endTime - startTime; //in ms
   // strip the ms
@@ -13,16 +11,26 @@ function countInSecond(startTime,endTime) {
 function keyRequest(){
     $('#inputError').hide();
     $('#successNoti').hide();
-  var wallet = $('#wallet').val();
-  var secretKey = $('#secretKey').val();
-  var sig = secretKey;
+    var wallet = $('#wallet').val();
+    var secretKey = $('#secretKey').val();
+    var seed = Math.floor(Math.random() * 1000000)
 
-  var validWallet = isAddress(wallet);
-  var validInputs = validWallet;
+    var validWallet = isAddress(wallet);
+    var validInputs = validWallet;
 
-  validWallet ? $('#walletError').hide() : $('#walletError').show();
+    if (validInputs) {
+        var seed = Math.floor(Math.random() * 1000000)
+        var str =  (wallet + secretKey + seed).toLowerCase();
+        var hash = md5(str);
+        //console.log(str, hash)
+        $('#hash').val(hash);
+        $('#seed').val(seed);
+        $('form#requestForm').submit()
+        return true
+    }
 
-return validInputs;
+    $('#walletError').show();
+    return false;
 }
 
 function isSuccess(apiKey) {
