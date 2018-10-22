@@ -36,7 +36,7 @@
 
     $reqId = $_updatedb->addRequest($shopId, $orderId, $extraData, $callbackUrl, $returnUrl, $amount, $currency, $ntyAmount, 
     $minBlockDistance, $startTime, $endTime, $fromWallet, $toWallet, $wallet ) ;
-    echo $reqId;
+    //echo $reqId;
     $merchantName = isset($_GET['merchantName']) ? $_GET['merchantName']: $_updatedb->getNameByMid($mid);
 
     foreach ($_GET as $key => $value) {

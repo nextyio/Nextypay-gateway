@@ -291,7 +291,7 @@ class Nextypayupdatedb{
     public function getReqId($shopId,$orderId,$wallet) {
         $table_name=$this->get_requests_table_name();
         $sql= "SELECT id AS val FROM $table_name WHERE shopId = '$shopId' AND orderId = '$orderId' AND wallet = '$wallet'";
-        echo $sql;
+        //echo $sql;
         $result = $this->get_value_query_db($sql);
         if ($result) return $result;
         return false;
@@ -322,15 +322,15 @@ class Nextypayupdatedb{
         $table_name = $this->get_requests_table_name();
 
         $sql = "INSERT INTO " . $table_name . "(shopId, orderId, extraData, callbackUrl, returnUrl, amount, currency, ntyAmount,
-            minBlockDistance, status, fromWallet, toWallet, wallet, startTime, endTime) VALUES
+            minBlockDistance, status, fromWallet, toWallet, wallet) VALUES
 
             ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$amount', '$currency' , '$_weiAmount', '$minBlockDistance', 
-            'Pending', '$_fromWallet', '$_toWallet', '$_wallet', '$startTime', '$endTime')";
+            'Pending', '$_fromWallet', '$_toWallet', '$_wallet')";
         //echo "adding request : <br>";
-        echo $sql;
+        //echo $sql;
         if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
         {
-            echo "ADDED REQUEST";
+            //echo "ADDED REQUEST";
             return $this->getReqId($shopId,$orderId,$wallet);}
     }
 
