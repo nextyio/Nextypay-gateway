@@ -511,8 +511,8 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         
         $result = curl_exec($ch);
-        //echo $result;
-        //echo 'test <br>';
+        echo $result;
+        echo 'test <br>';
         curl_close($ch);
         
         return $result;
