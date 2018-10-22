@@ -20,7 +20,7 @@
     $currency = isset($_GET['currency']) ? $_GET['currency']: 'nty';
     $_exchange->set_store_currency_code($currency);
     $ntyAmount = $_exchange->coinmarketcap_exchange($amount);
-    //$ntyAmount = 1; //TESTING
+    $ntyAmount = 1; //TESTING
 
     $startTime = NULL;
     $endTime = NULL;
