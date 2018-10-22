@@ -1,7 +1,7 @@
 <?php
-//error_reporting(E_ERROR | E_PARSE);
-ini_set('display_errors',1);
-error_reporting(E_ALL);
+error_reporting(E_ERROR | E_PARSE);
+//ini_set('display_errors',1);
+//error_reporting(E_ALL);
 //merchants register validator
 $gatewayWallet = '0x6f53c8502bb884775e422c7c34be681554cee2ba';
 
