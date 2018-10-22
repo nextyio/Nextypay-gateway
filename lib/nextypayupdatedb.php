@@ -291,6 +291,7 @@ class Nextypayupdatedb{
     public function getReqId($shopId,$orderId,$wallet) {
         $table_name=$this->get_requests_table_name();
         $sql= "SELECT id AS val FROM $table_name WHERE shopId = '$shopId' AND orderId = '$orderId' AND wallet = '$wallet'";
+        echo $sql;
         $result = $this->get_value_query_db($sql);
         if ($result) return $result;
         return false;
