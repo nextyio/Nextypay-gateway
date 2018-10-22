@@ -328,10 +328,9 @@ class Nextypayupdatedb{
         //echo "adding request : <br>";
         echo $sql;
         if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
-        return 
         {
             echo "ADDED REQUEST";
-            $this->getReqId($shopId,$orderId,$wallet);}
+            return $this->getReqId($shopId,$orderId,$wallet);}
     }
 
     
