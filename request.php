@@ -14,7 +14,7 @@
     $mid = isset($_GET['mid']) ? $_GET['mid'] : '';
     $wallet = $_updatedb->getWalletByMid($mid);
     $apiKey = $_updatedb->getApiKeyByMid($mid);
-    if ($apiKey != $_GET['apiKey']) {require_once('template/error.html'); exit;}
+    if ($apiKey != $_GET['apiKey']) {require_once('template/html/error.html');require_once('template/html/footer.html'); exit;}
     $toWallet = (isset($_GET['toWallet']) && ($_GET['toWallet'])) ? $_GET['toWallet'] : $wallet;
     $amount = isset($_GET['amount']) ? $_GET['amount']: 0;
     $currency = isset($_GET['currency']) ? $_GET['currency']: 'nty';
