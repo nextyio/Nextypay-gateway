@@ -326,7 +326,7 @@ class Nextypayupdatedb{
             ('$shopId', '$orderId', '$_extraData', '$callbackUrl', '$returnUrl', '$amount', '$currency' , '$_weiAmount', '$minBlockDistance', 
             'Pending', '$_fromWallet', '$_toWallet', '$_wallet', '$startTime', '$endTime')";
         //echo "adding request : <br>";
-        //echo $sql;
+        echo $sql;
         if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
         return $this->getReqId($shopId,$orderId,$wallet);
     }
