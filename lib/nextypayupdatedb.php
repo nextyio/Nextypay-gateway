@@ -343,7 +343,7 @@ class Nextypayupdatedb{
         $sql = "SELECT id as val FROM $table_name
                 WHERE toWallet = '$toWallet' AND extraData = '$extraData' AND status = 'Pending'
                 LIMIT 1";
-        //echo $sql."<br>";
+        echo $sql."<br>";
         $val = $this->get_value_query_db($sql);
         if (!$val) return -1;
         return $val;
