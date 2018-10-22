@@ -40,7 +40,7 @@
     $merchantName = isset($_GET['merchantName']) ? $_GET['merchantName']: $_updatedb->getNameByMid($mid);
 
     foreach ($_GET as $key => $value) {
-        //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
+        echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
     if ($reqId)
         require_once('template/html/request.html'); else require_once('template/html/error.html');
