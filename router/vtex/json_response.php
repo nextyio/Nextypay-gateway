@@ -25,6 +25,7 @@ function json_response($message = null, $code = 200)
         'message' => $message
         ));
         */
+        return json_encode($message);
 }
 
 // // if you are doing ajax with application-json headers
