@@ -11,10 +11,8 @@
     $request = $arr[1];
 
     function getPaymentMethods() {
-        $arr = array("paymentMethods" : array("Nextypay"));
-        // header('Content-Type: application/json');
-        // header('Status: 200 OK');
-        echo json_encode(($arr);
+        $arr = array("paymentMethods" => array("Nextypay"));
+        echo json_response($arr, 200);
     }
 
     if ($request == 'payment-methods') {getPaymentMethods(); exit;}
