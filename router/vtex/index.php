@@ -11,7 +11,7 @@
     $request = $arr[1];
 
     function getPaymentMethods() {
-        $arr = array("paymentMethods" => array("Nextypay"));
+        $arr = array("paymentMethods" => [array("Diners", "Elo" ]);
         echo json_response($arr, 200);
     }
 
