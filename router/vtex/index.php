@@ -1,5 +1,6 @@
 <?php 
-
+header('Content-Type: application/json');
+header('Status: 200 OK');
     require_once ('json_response.php');
 
     foreach ($_GET as $key => $value) {
@@ -11,7 +12,9 @@
 
     function getPaymentMethods() {
         $arr = array("paymentMethods" : array("Nextypay"));
-        json_response($arr, 200);
+        header('Content-Type: application/json');
+        header('Status: 200 OK');
+        echo json_encode(($arr);
     }
 
     if ($request == 'payment-methods') {getPaymentMethods(); exit;}
