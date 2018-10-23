@@ -1,0 +1,12 @@
+https://documenter.getpostman.com/view/2423893/7LjCQ6a#ac568a6a-d778-e5c3-4e33-019db2457704
+
+providerBaseUrl = gateway.nexty.io/router/vtex
+
+GET
+https://{providerBaseUrl}/payment-methods
+
+POST Create Payment
+https://{providerBaseUrl}/payments
+
+POST Capture Payment
+https://{providerBaseUrl}/payments/{paymentId}/settlements
