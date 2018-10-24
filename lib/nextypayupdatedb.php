@@ -461,10 +461,18 @@ class Nextypayupdatedb{
     }
 
     private function reqComplete($reqId) {
-        $tTable = $this->get_transactions_table_name();
         $rTable = $this->get_requests_table_name();
         $sql = "UPDATE $rTable 
                 SET status = 'Comfirmed'
+                WHERE id = '$reqId'";
+        //echo $sql;
+        $result = $this->query_db($sql);
+    }
+
+    public function recomfirm($reqId) {
+        $rTable = $this->get_requests_table_name();
+        $sql = "UPDATE $rTable 
+                SET status = 'Pending'
                 WHERE id = '$reqId'";
         //echo $sql;
         $result = $this->query_db($sql);
