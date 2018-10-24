@@ -19,7 +19,7 @@
 
     //ARE YOU KIDDING ME?
     echo "test";
-    if (!isset($reqCode) && !isset($_GET['reqCode']) && !isset($_POST['reqCode'])) {
+    if ((!$reqCode) && !isset($_GET['reqCode']) && !isset($_POST['reqCode'])) {
         require_once('accessdenied.php');
         exit;
     }
@@ -32,7 +32,7 @@
     $params = $reqMethod == 'POST' ? $_POST : $_GET;
     $output = $params;
     $access = true;
-    if (!isset($reqCode)) $reqCode = $params['reqCode'];
+    if (!$reqCode) $reqCode = $params['reqCode'];
     echo "req Code $reqCode";
     if ($reqCode != '0000') {
         require_once ('../setting.php');
