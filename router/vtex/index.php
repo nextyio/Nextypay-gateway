@@ -1,6 +1,10 @@
 <?php 
 // header('Content-Type: application/json');
 // header('Status: 200 OK');
+foreach ($_GET as $key => $value) {
+    echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
+}
+/*
     require_once ('../../lib/json_response.php');
     require_once ('request.php');
 
@@ -33,4 +37,5 @@
     if ($request == 'payment-methods') {$reqCode = '0000'};
     if ($request == 'payments') {$reqCode = '1000'};
     //require_once ('../../api/filter.php');
+    */
 ?>
