@@ -18,7 +18,7 @@
     //$mid
 
     //ARE YOU KIDDING ME?
-    if (!isset($_GET['reqCode']) && !isset($_POST['reqCode'])) {
+    if (!isset($reqCode) && !isset($_GET['reqCode']) && !isset($_POST['reqCode'])) {
         require_once('accessdenied.php');
         exit;
     }
@@ -31,7 +31,7 @@
     $params = $reqMethod == 'POST' ? $_POST : $_GET;
     $output = $params;
     $access = true;
-    if (!$reqCode) $reqCode = $params['reqCode'];
+    if (!isset($reqCode)) $reqCode = $params['reqCode'];
     if ($reqCode != '0000') {
         require_once ('../setting.php');
         $_apiKey = $_updatedb->getApiKeyByMid($mid);
