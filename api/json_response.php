@@ -7,7 +7,7 @@ function json_response($message = null, $code = 200)
     // set the actual code
     http_response_code($code);
     // set the header to make sure cache is forced
-    header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");
+    //header("Cache-Control: no-transform,public,max-age=300,s-maxage=900");
     // treat this as json
     header('Content-Type: application/json');
     $status = array(
