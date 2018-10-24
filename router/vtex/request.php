@@ -4,7 +4,7 @@
         echo json_response($arr, 200);
     }
 
-    function payments() {$data, $headers} {
+    function payments( $data, $headers) {
         /*
         //callbackUrl 
         //returnUrl
