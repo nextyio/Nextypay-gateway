@@ -5,7 +5,7 @@
     require_once ('request.php');
 
     foreach ($_GET as $key => $value) {
-        //echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
+        echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
     }
     $request = $_GET['request'];
     $arr = explode("/vtex/", $request);
@@ -32,5 +32,5 @@
 
     if ($request == 'payment-methods') {$reqCode = '0000'};
     if ($request == 'payments') {$reqCode = '1000'};
-    require_once ('../../api/filter.php');
+    //require_once ('../../api/filter.php');
 ?>
