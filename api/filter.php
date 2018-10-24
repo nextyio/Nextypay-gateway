@@ -16,49 +16,46 @@
     //IO => Inputs
     //$apiKey
     //$mid
-    require_once ("json_response.php");
-    require_once ('checkin.php'); //get $access, $reqCode
+    require_once (__DIR__."/json_response.php");
+    require_once (__DIR__."/checkin.php"); //get $access, $reqCode
 
     //access denied
     if (!$access) {
-        require_once('accessdenied.php');
+        require_once(__DIR__. '/accessdenied.php');
         exit;
     }
 
     switch ($reqCode) {
         case '0000':
-            require_once ('paymentmethods.php');
+            require_once (__DIR__. '/paymentmethods.php');
             exit;
 
         case '0001':
-            require_once ('processpayment.php');
+            require_once (__DIR__. '/processpayment.php');
             exit;
 
         case '0002':
-            require_once ('capturepayment.php');
+            require_once (__DIR__. '/capturepayment.php');
             exit;
 
         case '0003':
-            require_once ('redirecturl.php');
+            require_once (__DIR__. '/redirecturl.php');
             exit;
 
         case '0004':
-            require_once ('refundurl.php');
+            require_once (__DIR__. '/refundurl.php');
             exit;
 
         case '0005':
-            require_once ('exchange.php');
-            exit;
-            case '0000':
-            require_once ('paymentmethods.php');
+            require_once (__DIR__. '/exchange.php');
             exit;
 
         case '1000':
-            require_once ('createpayment.php');
+            require_once (__DIR__. '/createpayment.php');
             exit;
 
         case '1001':
-            require_once ('cancelpayment.php');
+            require_once (__DIR__. '/cancelpayment.php');
             exit;
 
         case '1002':
@@ -66,7 +63,7 @@
             exit;
 
         default:
-            require_once ('accessdenied.php');
+            require_once (__DIR__. '/accessdenied.php');
             exit;
     }
 

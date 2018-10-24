@@ -17,31 +17,12 @@
     //$apiKey
     //$mid
 
-    //ARE YOU KIDDING ME?
-    echo "test";
-    if ((!$reqCode) && !isset($_GET['reqCode']) && !isset($_POST['reqCode'])) {
-        require_once('accessdenied.php');
-        exit;
-    }
-
-    require_once ('headers.php');
-    //$mid = '14';
-    //$apiKey = 'wqpvepmzctldgdrcgtlsxnxxhpiaa8ib';
-
-    $reqMethod = isset($_POST['reqCode']) ? 'POST' : 'GET';
-    $params = $reqMethod == 'POST' ? $_POST : $_GET;
     $output = $params;
     $access = true;
-    if (!$reqCode) $reqCode = $params['reqCode'];
-    echo "req Code $reqCode";
+    $reqCode = $params['reqCode'] ;
     if ($reqCode != '0000') {
-        require_once ('../setting.php');
+        require_once (__DIR__ .'/../setting.php');
         $_apiKey = $_updatedb->getApiKeyByMid($mid);
         $access = ($_apiKey) && (strtolower($apiKey) == strtolower($_apiKey));
     }
-
-    //test
-    // $mid = '14';
-    // $apikey = 'wqpvepmzctldgdrcgtlsxnxxhpiaa8ib1';
-    // $access = true;
 ?>
