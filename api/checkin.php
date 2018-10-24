@@ -32,6 +32,7 @@
     $output = $params;
     $access = true;
     if (!isset($reqCode)) $reqCode = $params['reqCode'];
+    echo "req Code $reqCode";
     if ($reqCode != '0000') {
         require_once ('../setting.php');
         $_apiKey = $_updatedb->getApiKeyByMid($mid);
