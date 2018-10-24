@@ -16,7 +16,7 @@
     //IO => Inputs
     //$apiKey
     //$mid
-    require_once ("../helpers/json_response.php");
+    require_once ("json_response.php");
     require_once ('checkin.php'); //get $access, $reqCode
 
     //access denied
