@@ -32,7 +32,8 @@
         }
         return $headers;
     }
-    
+    $mid = '1';
+    $pKey = 'fdsgfds';
     $headers = getRequestHeaders();
 
     if ($request == 'payment-methods') {$reqCode = '0000';};
