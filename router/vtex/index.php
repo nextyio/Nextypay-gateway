@@ -37,5 +37,5 @@ foreach ($_GET as $key => $value) {
     if ($request == 'payment-methods') {$reqCode = '0000'};
     if ($request == 'payments') {$reqCode = '1000'};
     //require_once ('../../api/filter.php');
-    */
+    
 ?>
