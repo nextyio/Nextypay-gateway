@@ -1,11 +1,5 @@
 <?php 
-// header('Content-Type: application/json');
-// header('Status: 200 OK');
-/*
-    foreach ($_GET as $key => $value) {
-        echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
-    }
-*/
+
     $request = $_GET['request'];
     $arr = explode("/vtex/", $request);
     $request = $arr[1];
@@ -32,6 +26,6 @@
     $params['reqCode'] = 'xxxx';
     if ($request == 'payment-methods') {$params['reqCode'] = '0000';};
     if ($request == 'payments') {$params = $_POST; $params['reqCode'] = '1000';};
-    require_once ('../../api/filter.php');
+    require_once (__DIR__ . '/../../api/filter.php');
     
 ?>
