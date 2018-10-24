@@ -18,6 +18,7 @@
     //$mid
 
     //ARE YOU KIDDING ME?
+    echo "test";
     if (!isset($reqCode) && !isset($_GET['reqCode']) && !isset($_POST['reqCode'])) {
         require_once('accessdenied.php');
         exit;
