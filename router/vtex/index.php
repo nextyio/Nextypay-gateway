@@ -6,7 +6,7 @@ foreach ($_GET as $key => $value) {
 }
 
     require_once ('../../lib/json_response.php');
-    require_once ('request.php');
+    //require_once ('request.php');
 
     foreach ($_GET as $key => $value) {
         echo "Field ".htmlspecialchars($key)." is ".htmlspecialchars($value)."<br>"; //TEST
