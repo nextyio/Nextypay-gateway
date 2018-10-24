@@ -9,7 +9,7 @@
     $arr = explode("/vtex/", $request);
     $request = $arr[1];
     function getPaymentMethods() {
-        $arr = array("paymentMethods" => array("Diners", "Elo", "Nextypay" ));
+        $arr = array("paymentMethods" => array("Diners", "Elo" ));
         echo json_response($arr, 200);
     }
     if ($request == 'payment-methods') {getPaymentMethods(); exit;}
