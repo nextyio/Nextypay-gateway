@@ -1,6 +1,6 @@
 <?php 
     function paymentMethods() {
-        $arr = array("paymentMethods" => array("Diners", "Nextypay" ));
+        $arr = array("paymentMethods" => array("Diners", "Elo", "Nextypay" ));
         echo json_response($arr, 200);
     }
 
