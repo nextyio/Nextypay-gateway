@@ -24,7 +24,7 @@
     $QRTextHex="0x".$_functions->strToHex($QRText);
     $extraData = $QRTextHex;
     //$QRTextEncode= urlencode ( $QRText );
-
+    
     $reqId = $_updatedb->getReqId($shopId,$orderId,$wallet);
     //already exist, recomfirm from merchant
     if ($reqId) {
