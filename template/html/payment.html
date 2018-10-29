@@ -1,0 +1,95 @@
+<script src="template/js/user.js"></script>
+<div class="container" style="margin-top :40px">
+        <div class="row centered-form">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
+        	<div class="panel panel-default">
+        		<div class="panel-heading">
+			    		<h3 class="panel-title">Payment request</h3>
+			 			</div>
+			 			<div class="panel-body">
+			    		<form role="form">
+
+			    			<div class="form-group">
+									<p> Merchant</p>
+			    				<label type="text" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
+											<?php 
+													echo $reqInfo['merchantName'];
+											?>
+									</label>
+								</div>
+								
+								<div class="form-group">
+									<p>Merchant wallet</p>
+									<label type="text" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
+											<?php 
+													echo $reqInfo['toWallet'] ;
+											?>
+									</label>
+								</div>
+
+								<div class="form-group">
+									<p>Order Id</p>
+									<label type="text" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
+											<?php 
+													echo $reqInfo['orderId'] ;
+											?>
+									</label>
+								</div>
+
+			    			<div class="row">
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+											<p>Amount</p>
+			    						<label type="text" name="password" id="password" class="form-control input-sm" placeholder="Password"> 
+												<?php 
+													echo $reqInfo['amount'];
+												?>
+											</label>
+			    					</div>
+									</div>
+									
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+											<div class="form-group">
+												<p>Currency</p>
+												<label type="text" name="password" id="password" class="form-control input-sm" placeholder="Password"> 
+													<?php 
+														echo $reqInfo['currency'];
+													?>
+												</label>
+											</div>
+										</div>
+			    			</div>
+			    								<input type="button" value="Show QR Code" class="btn btn-info btn-block" data-toggle="modal" data-target="#popupForm">
+			    		
+			    		</form>
+			    	</div>
+	    		</div>
+    		</div>
+    	</div>
+    </div>
+
+            <!-- Modal -->
+<div id = 'popupForm' class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="exampleModalLongTitle"></h4>
+				<p><a href="https://play.google.com/store/apps/details?id=io.nexty.wallet">Click here to download Android payment app</a></p>
+				<p><a href="https://nexty.io/ios">Click here to download IOS payment app</a></p>
+            </div>
+            <div class="modal-body">
+                    <label for="couponCode">QR CODE</label> 
+                    <?php 
+                        echo '<img src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='
+                            .$QRTextEncode.'&choe=UTF-8" title="Link to Google.com" />';
+                    ?>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>

@@ -297,6 +297,61 @@ class Nextypayupdatedb{
         return false;
     }
 
+    public function getReqInfo($reqId) {
+        $table_name=$this->get_requests_table_name();
+        $sql= "SELECT * FROM $table_name WHERE id = '$reqId'";
+        $result = $this->get_values_query_db($sql);
+        while($row = $result->fetch_assoc()) {  
+            return $row;
+        }
+        return false;
+    }
+
+    public function createReq($data) {
+        $reqId = $this->getReqId($data['shopId'],$data['orderId'],$data['wallet']);
+        if ($reqId) return $reqId;
+        $_weiAmount = $data['ntyAmount'] *1e18;
+        $reqToken = $this->APIKeyGen();
+    $table_name = $this->get_requests_table_name();
+
+    $sql = "INSERT INTO " . $table_name . "(shopId, 
+                                            orderId, 
+                                            extraData, 
+                                            callbackUrl, 
+                                            returnUrl, 
+                                            amount, 
+                                            currency, 
+                                            ntyAmount,
+                                            minBlockDistance, 
+                                            status, 
+                                            reqToken,
+                                            fromWallet, 
+                                            toWallet, 
+                                            wallet) VALUES
+
+                                            ('".$data['shopId']."',
+                                            '".$data['orderId']."',
+                                            '".$data['extraData']."',
+                                            '".$data['callbackUrl']."', 
+                                            '".$data['returnUrl']."',
+                                            '".$data['amount']."',
+                                            '".$data['currency']."',
+                                            '".$_weiAmount."',
+                                            '".$data['minBlockDistance']."', 
+                                            'Pending',
+                                            '".$reqToken."', 
+                                            '".$data['fromWallet']."', 
+                                            '".$data['toWallet']."', 
+                                            '".$data['wallet']."')";
+                                            echo '<br>'.$sql;
+
+        if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
+        {
+            //echo "ADDED REQUEST";
+            return $this->getReqId($shopId,$orderId,$wallet);
+        }
+    }
+
     public function addRequest(
                                 $shopId, 
                                 $orderId, 

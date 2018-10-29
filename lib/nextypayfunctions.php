@@ -15,12 +15,19 @@ class Nextypayfunctions{
     return static::$instance;
   }
 
-  public function getQRCode($walletAddress,$order_id,$order_total)
+  public function getQRText($toWallet, $uoid, $ntyAmount)
   {
-      $QRtext = '{"walletaddress": "' . $walletAddress . '","uoid": "' . $order_id . '","amount": "' . $order_total . '"}';
-      $QRtext_hex = "0x".$this->strToHex($QRtext);
-      $QRtextencode = urlencode($QRtext_hex);
-      return $QRtextencode;
+      return '{"walletaddress":"'.$toWallet.'","uoid":"'.$uoid.'","amount":"'.$ntyAmount.'"}';
+  }
+
+  public function getQRHex($QRtext){
+      return "0x".$this->strToHex($QRtext);
+  }
+
+  public function getQRUrl($QRtext) {
+      $QRTextEncode = urlencode($QRText);
+      $QRUrl = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl='.$QRTextEncode.'&choe=UTF-8';
+      return $QRUrl;
   }
 
   public function strToHex($string){

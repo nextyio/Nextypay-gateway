@@ -52,6 +52,7 @@ class NextypaySetup {
 
                     fromWallet char(50) DEFAULT NULL,
                     toWallet char(50) ,
+                    reqToken char(50),
 
                     PRIMARY KEY (id),
                     wallet char(50)  ,
