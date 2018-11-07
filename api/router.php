@@ -1,4 +1,5 @@
 <?php 
+    error_reporting(E_ERROR | E_PARSE);
     /*Outputs: 
         $reqMethod  = 'GET' or 'POST'
         $io         = 'default', 'vtex'
@@ -24,6 +25,7 @@
     require_once (__DIR__."/../setting.php");
     require_once (__DIR__."/lib/json_response.php");
     require_once (__DIR__."/lib/headers.php");
+    require_once (__DIR__."/access/denied.php");
 
     //Nginx htaccess
     //gateway.nexty.io/api/{string} -> gateway.nexty.io/api/?path={string}
@@ -34,18 +36,25 @@
     //vtex      :   gateway.nexty.io/api/vtex/?{GET String} -> 
     //           -> gateway.nexty.io/api/?path=0vtex?{GET String}   
 
+    $ioList = array('vtex');
     $path = $_GET['path'];
-    
-    function getIoFromPath($path) {
-        $pos = strpos($path, '0/');
-        if ($pos === 0) return 'default';
-        $pos = strpos($path, 'vtex');
-        if ($pos == 1) return 'vtex';
-        return 'unknown';
+    $paths = explode('/', $path);
+
+    // $outputs['originPost'] = $_POST;
+    // $outputs['originGet'] = $_GET;
+    // $outputs['headers'] = $headers;
+    // $outputs['path'] = $path;
+    // echo json_encode($outputs); exit;
+
+    function getIoFromPath($io, $ioList) {
+        if (in_array($io, $ioList)) {
+            return $io;
+        }
+        return 'default';
     }
 
-    $io = getIoFromPath($path);
-    //echo $io;
+    $io = getIoFromPath($paths[2], $ioList);
+
     switch ($io) {
         case 'default' :
             require_once(__DIR__. '/io/default.php');
@@ -63,6 +72,9 @@
     require_once(__DIR__. '/control/core.php');    
 
     $outputs = getOutputs($data);
-    //echo json_encode($outputs); exit;
+    $outputs['originPost'] = $_POST;
+    $outputs['originGet'] = $_GET;
+    $outputs['path'] = $path;
+    echo json_encode($outputs); exit;
     getResponse($data, $outputs);
 ?>

@@ -2,8 +2,7 @@ function validatePhone(txtPhone) {
     var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
     if (filter.test(txtPhone)) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -29,8 +28,7 @@ function isAddress(address) {
         // If it's all small caps or all all caps, return true
         return true;
     } else {
-        // Otherwise check each case
-        //return isChecksumAddress(address);
+        // Otherwise check each case return isChecksumAddress(address);
         return true;
     }
 };
@@ -44,10 +42,10 @@ function isAddress(address) {
 */
 function isChecksumAddress(address) {
     // Check each case
-    address = address.replace('0x','');
+    address = address.replace('0x', '');
     var addressHash = sha3(address.toLowerCase());
     alert(addressHash)
-    for (var i = 0; i < 40; i++ ) {
+    for (var i = 0; i < 40; i++) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
         if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
             return false;
@@ -57,10 +55,9 @@ function isChecksumAddress(address) {
 };
 
 function validateEmail(email) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email))
-    {
-      return (true)
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        return (true)
     }
-      //alert("You have entered an invalid email address!")
-      return (false)
+    //alert("You have entered an invalid email address!")
+    return (false)
 }

@@ -6,6 +6,7 @@ class NextypaySetup {
     private $merchantsTable     = "merchants";
     private $requestsTable      = "requests";
     private $transactionsTable  = "transactions";
+    private $undefinedTxTable   = "undefinedtxs";
     private $varsTable          = "vars";
 
     private function createMerchantsTable(){
@@ -29,6 +30,25 @@ class NextypaySetup {
                 ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
 
         $npdb->query($sql);
+
+        //TEST INIT
+        $mid = 1;
+        $_wallet = strtolower('0x95EF1b2632857730D1eE99C64417209a8F51889D');
+        $privateKey = 'xxxx'; // secret key
+        $publicKey = 'xxxx'; //api key
+        $comfirmAmount = rand(1,10);
+        $weiAmount = $comfirmAmount *1e18;
+        //$merchantName, $url, $email, $gatewayWallet
+        $merchantName = 'test Lucky';
+        $url = 'http://207.148.119.222:3003/api/callback/deposit';
+        $email = 'test@luckly.mail';
+        $gatewayWallet = '0x0';
+
+        
+        $sql = "INSERT INTO " . $table . " (mid, wallet, name, url, email, totalRequest, totalAmount, publicKey, privateKey, comfirmAmount, status) VALUES
+        ('$mid', '$_wallet', '$merchantName', '$url', '$email', 0, 0, '$publicKey', '$privateKey', $weiAmount, 'Comfirmed')";
+        echo $sql;
+        $npdb->query($sql);
     }
     
     private function createRequestsTable(){
@@ -39,8 +59,8 @@ class NextypaySetup {
                     id bigint(20) AUTO_INCREMENT,
                     extraData text ,
                     callbackUrl text ,
-                    shopId bigint(20),
-                    orderId bigint(20),
+                    shopId varchar(255),
+                    orderId varchar(255),
                     returnUrl text ,
                     amount text ,
                     currency text ,
@@ -49,6 +69,8 @@ class NextypaySetup {
                     startTime datetime,
                     endTime datetime,
                     status enum('Pending', 'Paid', 'Comfirmed'),
+                    nextCall datetime DEFAULT CURRENT_TIMESTAMP,
+                    totalCalls int DEFAULT 0,
 
                     fromWallet char(50) DEFAULT NULL,
                     toWallet char(50) ,
@@ -85,6 +107,29 @@ class NextypaySetup {
         $npdb->query($sql);
     }
 
+    private function createUndefinedTxTable(){
+        global $npdb;
+        $table = $this->undefinedTxTable;
+        $sql = "
+                CREATE TABLE IF NOT EXISTS " . "$table" . "(
+                    hash char(70) ,
+                    fromWallet char(50) ,
+                    toWallet char(50) ,
+                    ntyAmount decimal(60,0) ,
+                    gasUsed bigint(20) DEFAULT NULL,
+                    blockNumber bigint(20) ,
+                    mWallet char(50)  ,
+                    FOREIGN KEY (mWallet) REFERENCES merchants(wallet) 
+                    ON DELETE CASCADE ON UPDATE CASCADE,
+                    status enum('Pending', 'Comfirmed', 'Failed'),
+                    nextCall datetime DEFAULT CURRENT_TIMESTAMP,
+                    totalCalls int DEFAULT 0,
+
+                    PRIMARY KEY (hash)
+                ) ENGINE=InnoDB DEFAULT COLLATE=utf8_general_ci;";
+        $npdb->query($sql);
+    }
+
     private function createVarsTable(){
         global $npdb;
         $table = $this->varsTable;
@@ -114,6 +159,7 @@ class NextypaySetup {
         $this->createMerchantsTable();
         $this->createRequestsTable();
         $this->createTransactionsTable();
+        $this->createUndefinedTxTable();
         $this->createVarsTable();
         $this->createFunction();
     }

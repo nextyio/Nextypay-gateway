@@ -1,5 +1,6 @@
 <?php
     function denied() {
-        return json_response(['status' => 'access denied'], 400);
+        echo json_encode(array("status" => "denied"));
+        exit;
     }
 ?>

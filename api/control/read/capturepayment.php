@@ -1,24 +1,31 @@
 <?php 
+    //CLEAN
     //http://localhost/api/?path=0/payments/settlements/&mid=1&shopId=0&orderId=2
-    //Requires:
     function capturepayment($data){
         global $_functions;
         global $_updatedb;
         global $_exchange;
 
-        $arr = $data;
-        
-        echo $reqId.'<br>';
-        $reqId = $_updatedb->getReqId($data['shopId'],$data['orderId'],$data['wallet']);
-        echo json_encode($data);
-        echo '<br>'.$reqId.'<br>';
-        $arr['status'] = $reqId ? 'success' : 'failed';
-        if (!$reqId) return $arr;
+        if (!isset($data['wallet']))
+        $data['wallet']     = $_updatedb->getWalletByMid($data['mid']);
 
-        $arr['transferedAmount'] = $_updatedb->getTransfered($reqId);
-        $arr['reqId'] = $reqId;
+        
+        $output = $data;
+        //CHECK REQTOKEN
+
+        // echo json_encode($data);
+        // exit;
+        if (!isset($data['reqId']))
+        $reqId = $_updatedb->getReqId($data['shopId'],$data['orderId'],$data['wallet']);
+ 
+        $output['status'] = $reqId ? 'success' : 'failed';
+        if (!$reqId) return $output;
+
         $reqInfo = $_updatedb->getReqInfo($reqId);
-        $arr['reqInfo'] = $reqInfo;
-        return $arr;
+        
+        $output['reqInfo'] = $reqInfo;
+        $output['transferedAmount'] = $_updatedb->getTransfered($reqId);
+        $output['reqId'] = $reqId;
+        return $output;
     }
 ?>

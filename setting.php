@@ -1,8 +1,11 @@
 <?php
+//CLEAN
 error_reporting(E_ERROR | E_PARSE);
 //ini_set('display_errors',1);
 //error_reporting(E_ALL);
 //merchants register validator
+
+$TESTMODE = FALSE;
 $gatewayWallet = '0x6f53c8502bb884775e422c7c34be681554cee2ba';
 
 require_once('lib/npdb.php');
@@ -24,13 +27,13 @@ require_once('lib/nextypayblockchain.php');
 require_once('lib/nextypayexchange.php');
 require_once('lib/nextypayfunctions.php');
 require_once('lib/nextypayupdatedb.php');
-require_once('lib/helper.php');
+//require_once('lib/helper.php');
 
-$_db_prefix='';
-$_updatedb=new Nextypayupdatedb;
-$_blockchain= new Nextypayblockchain;
-$_exchange= new Nextypayexchange;
-$_functions= new Nextypayfunctions;
+$_db_prefix     = '';
+$_updatedb      = new Nextypayupdatedb;
+$_blockchain    = new Nextypayblockchain;
+$_exchange      = new Nextypayexchange;
+$_functions     = new Nextypayfunctions;
 
 $testnet    = "http://125.212.250.61:11111";
 $local      = "http://127.0.0.1:8545";
@@ -45,7 +48,6 @@ $_updatedb->set_gatewayWallet($gatewayWallet);
 
 function render($page) {
     $htmlFolder = 'template/html/';
-    //echo $htmlFolder.$page;
     require_once($htmlFolder . 'header.html');
     require_once($htmlFolder . $page);
     require_once($htmlFolder . 'footer.html');

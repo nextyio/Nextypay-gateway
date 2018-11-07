@@ -1,14 +1,17 @@
 <?php 
+    //CLEAN
     /*
-    require_once __DIR__.'/read/capturepayment.php';
-    require_once __DIR__.'/read/exchange.php';
-    require_once __DIR__.'/read/paymentmethods.php';
-    require_once __DIR__.'/read/redirecturl.php';
-    require_once __DIR__.'/read/refundurl.php';
+        Read mode: 
+            api/payment-methods/
+            api/payments/capture/
+            api/payments/redirecturl
+            api/payments/refundurl
+            api/payments/exchange
 
-    require_once __DIR__.'/write/cancelpayment.php';
-    require_once __DIR__.'/write/createpayment.php';
-    require_once __DIR__.'/write/refundpayment.php';
+        Write mode:
+            api/payments/create
+            api/payments/cancel
+            api/payments/refund
     */
     function getOutputs($data) {
         $code = $data['reqCode'];
@@ -42,7 +45,7 @@
             default :
                 require_once(__DIR__. '/../access/denied.php');
                 return denied();
-                exit;
+                //exit;
         }
     }
 ?>

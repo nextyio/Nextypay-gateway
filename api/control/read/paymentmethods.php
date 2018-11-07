@@ -1,6 +1,7 @@
 <?php 
-    function paymentMethods() {
-        $arr = array("paymentMethods" => array("Nextypay" ));
-        return $arr;
+    //CLEAN
+    function paymentMethods($data) {
+        $outputs = array("paymentMethods" => array("Bitcoin", "NTY" ));
+        return $outputs;
     }
 ?>

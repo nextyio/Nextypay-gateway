@@ -126,6 +126,10 @@ class Nextypayupdatedb{
         return 'transactions';
     }
 
+    private function get_undefined_txs_table_name(){
+        return 'undefinedtxs';
+    }
+
     //Check exist
 
     private function transaction_exist($hash){
@@ -133,6 +137,13 @@ class Nextypayupdatedb{
         $sql= "SELECT hash AS val FROM $table_name WHERE hash='$hash'";
         $result = $this->get_value_query_db($sql);
         if ($result) return true;
+
+        //in undefined txs table
+        $table_name=$this->get_undefined_txs_table_name();
+        $sql= "SELECT hash AS val FROM $table_name WHERE hash='$hash'";
+        $result = $this->get_value_query_db($sql);
+        if ($result) return true;
+
         return false;
     }
 
@@ -343,12 +354,12 @@ class Nextypayupdatedb{
                                             '".$data['fromWallet']."', 
                                             '".$data['toWallet']."', 
                                             '".$data['wallet']."')";
-                                            echo '<br>'.$sql;
+                                            //echo '<br>'.$sql;
 
         if ($this->query_db($sql)) return $this->_connection->conn->insert_id; else
         {
             //echo "ADDED REQUEST";
-            return $this->getReqId($shopId,$orderId,$wallet);
+            return $this->getReqId($data['shopId'],$data['orderId'],$data['wallet']);
         }
     }
 
@@ -392,15 +403,32 @@ class Nextypayupdatedb{
     
     public function searchReqId($transaction){
         $toWallet = $transaction['to'];
+        //echo $toWallet;
         $extraData = $transaction['input'];
         $table_name = $this->get_requests_table_name();
         //check requests, extraData = extraData, wallet = toWallet return request id
         $sql = "SELECT id as val FROM $table_name
                 WHERE toWallet = '$toWallet' AND extraData = '$extraData' AND status = 'Pending'
                 LIMIT 1";
-        echo $sql."<br>";
+        //echo $sql."<br>";
         $val = $this->get_value_query_db($sql);
-        if (!$val) return -1;
+        if (!$val) {
+            if (!$val) return -1;
+        }
+        return $val;
+    }
+
+    public function searchMWallet($transaction){
+        $toWallet = $transaction['to'];
+        $table_name = $this->get_merchants_table_name();
+        $sql = "SELECT wallet as val FROM $table_name
+                WHERE wallet = '$toWallet'
+                LIMIT 1";
+        //echo $sql."<br>";
+        $val = $this->get_value_query_db($sql);
+        if (!$val) {
+            if (!$val) return -1;
+        }
         return $val;
     }
 
@@ -435,37 +463,56 @@ class Nextypayupdatedb{
         return $this->query_db($sql);
     }
 
+    private function txCallback($callbackUrl, $hash) {
+        $url = $callbackUrl."?hash=$hash";
+        $ch = curl_init();
+
+        // set URL and other appropriate options
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+
+        // grab URL and pass it to the browser
+        $content = curl_exec($ch);
+
+        // close cURL resource, and free up system resources
+        curl_close($ch);
+        
+        return $content;
+
+    }
+
     private function insert_transactions_db($transactions){
         //search request by toWallet and extraData
-        $table_name=$this->get_transactions_table_name();
+
         foreach ($transactions as $transaction) {
+            $hash= strtolower($transaction['hash']);
+            if ($this->transaction_exist($hash)) return;
             $toWallet = $transaction['to'];
             $fromWallet = $transaction['from'];
             $ntyAmount = hexdec($transaction['value']);
-            $extraData=$transaction['input'];
+            $extraData = $transaction['input'];
+            $gasUsed = hexdec($transaction['gas']);
+            $block_hash = $transaction['blockHash'];
+            $blockNumber = hexdec($transaction['blockNumber']);
             $reqId = $this->searchReqId($transaction);
+            $mWallet = $this->searchMWallet($transaction);
             $merchantId = $this->searchMerchant($transaction, $fromWallet, $toWallet, $ntyAmount);
-
-            if ($reqId >= 0){
-
-                $block_hash = $transaction['blockHash'];
-                $blockNumber = hexdec($transaction['blockNumber']);
-                //echo $blockNumber;
-
-                $gasUsed = hexdec($transaction['gas']);
-                $status = "Pending";
-
-                $hash=strtolower($transaction['hash']);
-                //echo "hash = " . json_encode($transaction) . "<br>";
-                //echo "ntyAmount = " . $ntyAmount;
-
-                if (!$this->transaction_exist($hash)){
-                    $sql = "INSERT INTO " . $table_name . "(hash, fromWallet, toWallet, ntyAmount, gasUsed, blockNumber, reqId, status) VALUES
-                        ('$hash', '$fromWallet', '$toWallet', '$ntyAmount', '$gasUsed', '$blockNumber', '$reqId', '$status')";
-                        //echo $sql."<br>";
-                    $this->query_db($sql);
-                }
-
+            $status = 'Pending';
+            //echo $mWallet;
+            //echo json_encode($transaction);
+            if ($reqId >= 0) {
+                $table_name=$this->get_transactions_table_name();
+                $sql = "INSERT INTO " . $table_name . "(hash, fromWallet, toWallet, ntyAmount, gasUsed, blockNumber, reqId, status) VALUES
+                    ('$hash', '$fromWallet', '$toWallet', '$ntyAmount', '$gasUsed', '$blockNumber', '$reqId', '$status')";
+                //echo $sql."<br>";
+                $this->query_db($sql);
+            } else {
+                //search undefined 
+                $table_name=$this->get_undefined_txs_table_name();
+                $sql = "INSERT INTO " . $table_name . "(hash, fromWallet, toWallet, ntyAmount, gasUsed, blockNumber, mWallet, status) VALUES
+                ('$hash', '$fromWallet', '$toWallet', '$ntyAmount', '$gasUsed', '$blockNumber', '$mWallet', '$status')";
+                //echo $sql."<br>";
+                $this->query_db($sql);
             }
         }
     }
@@ -485,22 +532,49 @@ class Nextypayupdatedb{
         $currentBlock = $this->getMaxBlock();
         $tTable = $this->get_transactions_table_name();
         $rTable = $this->get_requests_table_name();
-        /*
-        $sql = "SELECT DISTINCT $tTable.reqId as val FROM $tTable
-        join $rTable on $tTable.reqId = $rTable.id 
-        WHERE $tTable.status= 'Pending' AND $tTable.blockNumber + $rTable.minBlockDistance < $currentBlock";
-        $result = $this->get_values_query_db($sql);
-        echo $sql;
-        while($row = mysqli_fetch_assoc($result)) {
-        echo "<br>" . $row['val'] . "<br>";
-        }*/
-        //echo json_encode($result);
-        //Ultimate
+
         $sql = "UPDATE $tTable
             join $rTable on $tTable.reqId = $rTable.id 
             SET $tTable.status='Accepted' 
             WHERE $tTable.status= 'Pending' AND $tTable.blockNumber + $rTable.minBlockDistance < $currentBlock";
         //echo "<br>" . $sql;
+        $this->query_db($sql);
+    }
+
+    public function updateUndefinedTxs() {
+        $currentBlock = $this->getMaxBlock();
+        $tTable = $this->get_undefined_txs_table_name();
+        $mTable = $this->get_merchants_table_name();
+
+        $sql = "SELECT * FROM $tTable
+            join $mTable on $tTable.mWallet = $mTable.wallet 
+            WHERE $tTable.status= 'Pending' AND $tTable.nextCall < NOW()";
+        //echo "<br>" . $sql;
+        $result = $this->get_values_query_db($sql);
+
+        while($row = mysqli_fetch_assoc($result)) {
+            $url = $row['url'];
+            $hash = $row['hash'];
+            $res = $this->txCallback($url,$hash);
+            //echo "<br>callback $url $hash";
+            if ($res) {
+                $sql = "UPDATE $tTable
+                    SET $tTable.status = 'Comfirmed'
+                    WHERE hash = '$hash'";
+                $this->query_db($sql);
+            }
+        }
+
+        $sql = "UPDATE $tTable
+            join $mTable on $tTable.mWallet = $mTable.wallet 
+            SET $tTable.status = 'Failed' 
+            WHERE $tTable.totalCalls= '3'";
+        $this->query_db($sql);
+
+        $sql = "UPDATE $tTable
+            join $mTable on $tTable.mWallet = $mTable.wallet 
+            SET $tTable.totalCalls = $tTable.totalCalls + 1, $tTable.nextCall = DATE_ADD($tTable.nextCall, INTERVAL 15 SECOND)
+            WHERE $tTable.status= 'Pending' AND $tTable.nextCall < NOW()";
         $this->query_db($sql);
     }
 
@@ -519,7 +593,7 @@ class Nextypayupdatedb{
         $rTable = $this->get_requests_table_name();
         $sql = "UPDATE $rTable 
                 SET status = 'Comfirmed'
-                WHERE id = '$reqId'";
+                WHERE id = '$reqId' AND amount > 0";
         //echo $sql;
         $result = $this->query_db($sql);
     }
@@ -628,6 +702,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
             // echo "<br> id " . $row['id'] . "<br>";
             // echo "<br> extraData " . $row['extraData'] . "<br>";
             //echo "<br> callbackUrl " . $row['callbackUrl'] . "<br>";
+            if ($amount > 0) {
             $response = $this->callback($reqId, 
                                         $privateKey, 
                                         $callbackUrl, 
@@ -640,6 +715,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
                                         $ntyAmount,
                                         $gas);
             if ($this->callbackVerify($response)) $this->reqComplete($reqId);
+            }
         }
     }
 
@@ -650,6 +726,7 @@ if ($hash != md5($invoiceId . $transactionId . $paymentAmount . $secretKey)) {
     public function updatedb(){
         //$this->init_blocks_table_db();
         $this->updateTransactions();
+        $this->updateUndefinedTxs();
         $this->updateRequests();
         $this->comfirmRequests();
         //echo "last Block loaded : ". $this->getMaxBlock() . "<br>";

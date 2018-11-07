@@ -1,14 +1,14 @@
-function countInSecond(startTime,endTime) {
-  var timeDiff = endTime - startTime; //in ms
-  // strip the ms
-  timeDiff /= 1000;
+function countInSecond(startTime, endTime) {
+    var timeDiff = endTime - startTime; //in ms
+    // strip the ms
+    timeDiff /= 1000;
 
-  // get seconds
-  var seconds = Math.round(timeDiff);
-  return seconds;
+    // get seconds
+    var seconds = Math.round(timeDiff);
+    return seconds;
 }
 
-function keyRequest(){
+function keyRequest() {
     $('#inputError').hide();
     $('#successNoti').hide();
     var wallet = $('#wallet').val();
@@ -20,7 +20,7 @@ function keyRequest(){
 
     if (validInputs) {
         var seed = Math.floor(Math.random() * 1000000)
-        var str =  (wallet + secretKey + seed).toLowerCase();
+        var str = (wallet + secretKey + seed).toLowerCase();
         var hash = md5(str);
         //console.log(str, hash)
         $('#hash').val(hash);
@@ -34,7 +34,8 @@ function keyRequest(){
 }
 
 function isSuccess(apiKey) {
-    if (apiKey == '-1') return
+    if (apiKey == '-1') 
+        return
     if (apiKey == '0') {
         $('#inputError').show();
         $('#successNoti').hide();
@@ -44,4 +45,3 @@ function isSuccess(apiKey) {
         $('#newApiKey').text(apiKey);
     }
 }
-

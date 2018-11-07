@@ -8,7 +8,7 @@ function countInSecond(startTime, endTime) {
     return seconds;
 }
 
-function call_ajax(startTime, reqId, timeout, interval) {
+function call_ajax(reqId, reqToken, startTime, timeout, interval) {
 
     var seconds = countInSecond(startTime, new Date());
     console.log(seconds, reqId);
@@ -19,14 +19,13 @@ function call_ajax(startTime, reqId, timeout, interval) {
     var paid = "0";
     setTimeout(function () {
         $
-            .post("ajax.php", {
-                'reqId': reqId
+            .post("ajaxrequest.php", {
+                'reqId': reqId,
+                'reqToken': reqToken
             }, function (data, status) {
-                console.log(reqId + "Data: " + data + "\nStatus: " + status);
-                if ((status == 'success') && (data)) {
-                    window
-                        .location
-                        .replace(data);
+                if ((data.status == 'success') && (data)) {
+                    //window.location.replace(data);
+                    console.log('test' + data);
                 } else {
                     call_ajax(startTime, reqId, timeout, interval);
                 }
