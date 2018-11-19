@@ -486,6 +486,7 @@ class Nextypayupdatedb{
 
         foreach ($transactions as $transaction) {
             $hash= strtolower($transaction['hash']);
+            echo $hash;
             if ($this->transaction_exist($hash)) return;
             $toWallet = $transaction['to'];
             $fromWallet = $transaction['from'];
