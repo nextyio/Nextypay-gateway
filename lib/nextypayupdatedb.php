@@ -505,7 +505,7 @@ class Nextypayupdatedb{
                 $table_name=$this->get_transactions_table_name();
                 $sql = "INSERT INTO " . $table_name . "(hash, fromWallet, toWallet, ntyAmount, gasUsed, blockNumber, reqId, status) VALUES
                     ('$hash', '$fromWallet', '$toWallet', '$ntyAmount', '$gasUsed', '$blockNumber', '$reqId', '$status')";
-                //echo $sql."<br>";
+                echo $sql."<br>";
                 $this->query_db($sql);
             } else {
                 //search undefined 
