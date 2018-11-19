@@ -424,7 +424,7 @@ class Nextypayupdatedb{
         $sql = "SELECT wallet as val FROM $table_name
                 WHERE wallet = '$toWallet'
                 LIMIT 1";
-        //echo $sql."<br>";
+        echo $sql."<br>";
         $val = $this->get_value_query_db($sql);
         if (!$val) {
             if (!$val) return -1;
