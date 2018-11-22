@@ -126,12 +126,17 @@ curl_close($ch);
         if ($paths[3] == 'payments') {
             $paymentMethodsList = array('bitcoin', 'nty');
             $paymentmethod = strtolower($data['paymentMethod']);
-
+            $data['status'] = 'approved';
             if ((!in_array($paymentmethod, $paymentMethodsList)) && ($data['card']['number'])){
                 //echo json_encode($data['card']); exit;
                 $data['reqCode'] = '0000';
                 denied();
                 return $data;
+            }
+
+            if ((!in_array($paymentmethod, $paymentMethodsList)) && (!$data['card']['number'])){
+                //echo json_encode($data['card']); exit;
+                $data['status'] = 'undefined';
             }
 
             $data['reqCode'] = '1001';
@@ -166,7 +171,7 @@ curl_close($ch);
 
         //Create Payment
         if ($code == '1001') {
-            $res['status'] = 'approved';
+            $res['status'] = $outputs['status'];
             $res['paymentId'] = $outputs['paymentId'];
             $res['authorizationId'] = $outputs['paymentId'];
             $res['bankIssueInvoiceUrl'] = null;
