@@ -128,7 +128,7 @@ curl_close($ch);
             $paymentmethod = strtolower($data['paymentMethod']);
 
             if (!in_array($paymentmethod, $paymentMethodsList)) {
-                echo $data; exit;
+                echo json_encode($data); exit;
                 $data['reqCode'] = '0000';
                 denied();
                 return $data;
