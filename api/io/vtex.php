@@ -116,7 +116,7 @@ curl_close($ch);
             // //echo json_encode($data); exit;
             // return $data;
             $res = $data;
-            $res['refundId'] = $data['reqId'];
+            $res['refundId'] = $data['transactionId'];
             $res['value'] = 0;
             $res['responses'] = array('msg' => 'we dont support this method');
             echo json_response_with_headers($res, 200, $headers);
