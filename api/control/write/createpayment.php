@@ -37,7 +37,7 @@
         $outputs            = $data;
         $outputs['reqId']   = $_updatedb->createReq($data);
         $reqId              = $outputs['reqId'];
-
+        if ($data['status'] != 'undefined');
         $outputs['status'] = $outputs['reqId'] ? 'success' : 'failed';
         if (!$outputs['reqId']) return $outputs;
 
