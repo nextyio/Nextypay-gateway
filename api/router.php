@@ -75,6 +75,6 @@
     $outputs['originPost'] = $_POST;
     $outputs['originGet'] = $_GET;
     $outputs['path'] = $path;
-    echo json_encode($outputs); exit;
+    //echo json_encode($outputs); exit;
     getResponse($data, $outputs);
 ?>
