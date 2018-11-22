@@ -115,7 +115,7 @@ curl_close($ch);
             // $data['reqId'] = $data['settleId'];
             // //echo json_encode($data); exit;
             // return $data;
-
+            $res = $data;
             $res['refundId'] = $data['reqId'];
             $res['value'] = 0;
             $res['responses'] = array('msg' => 'we dont support this method');
