@@ -215,6 +215,7 @@ curl_close($ch);
         if ($code == '1003') {
             //echo json_encode($outputs);exit;
             //unset($res);
+            $res = $data;
             $res['refundId'] = $data['reqId'];
             $res['value'] = 0;
             $res['responses'] = array('msg' => 'we dont support this method');
