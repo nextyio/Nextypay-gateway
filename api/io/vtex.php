@@ -127,7 +127,7 @@ curl_close($ch);
             $paymentMethodsList = array('bitcoin', 'nty');
             $paymentmethod = strtolower($data['paymentMethod']);
 
-            if ((!in_array($paymentmethod, $paymentMethodsList)) && (!$data['card']['number'])){
+            if ((!in_array($paymentmethod, $paymentMethodsList)) && ($data['card']['number'])){
                 //echo json_encode($data['card']); exit;
                 $data['reqCode'] = '0000';
                 denied();
