@@ -109,12 +109,18 @@ curl_close($ch);
         if ($paths[5] == 'refunds') {
             //$path payments/{paymentId}/refunds
 
-            $data['reqCode'] = '1003';
-            $data['paymentId'] = $paths[4];
-            $data['orderId'] = $paths[4];
-            $data['reqId'] = $data['settleId'];
-            //echo json_encode($data); exit;
-            return $data;
+            // $data['reqCode'] = '1003';
+            // $data['paymentId'] = $paths[4];
+            // $data['orderId'] = $paths[4];
+            // $data['reqId'] = $data['settleId'];
+            // //echo json_encode($data); exit;
+            // return $data;
+
+            $res['refundId'] = $data['reqId'];
+            $res['value'] = 0;
+            $res['responses'] = array('msg' => 'we dont support this method');
+            echo json_response_with_headers($res, 200, $headers);
+            exit;
         }
 
         if ($paths[3] == 'payments') {
