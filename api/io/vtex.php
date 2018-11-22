@@ -109,9 +109,9 @@ curl_close($ch);
         if ($paths[5] == 'refunds') {
             //$path payments/{paymentId}/refunds
 
-            // $data['reqCode'] = '1003';
-            // $data['paymentId'] = $paths[4];
-            // $data['orderId'] = $paths[4];
+            $data['reqCode'] = '1003';
+            $data['paymentId'] = $paths[4];
+            $data['orderId'] = $paths[4];
             // $data['reqId'] = $data['settleId'];
             // //echo json_encode($data); exit;
             return $data;
