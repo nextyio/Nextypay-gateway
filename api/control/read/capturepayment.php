@@ -13,8 +13,8 @@
         $output = $data;
         //CHECK REQTOKEN
 
-        // echo json_encode($data);
-        // exit;
+        echo json_encode($data);
+        exit;
         if (!isset($data['reqId']))
         $reqId = $_updatedb->getReqId($data['shopId'],$data['orderId'],$data['wallet']);
  
