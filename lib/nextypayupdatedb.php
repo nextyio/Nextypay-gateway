@@ -220,7 +220,7 @@ class Nextypayupdatedb{
         $sql = "INSERT INTO " . $table_name . "(mid, wallet, name, url, email, totalRequest, totalAmount, publicKey, privateKey, comfirmAmount, status) VALUES
             ('$mid', '$_wallet', '$merchantName', '$url', '$email', 0, 0, '$publicKey', '$privateKey', $weiAmount, 'Pending')";
         $result = $this->query_db($sql);
-        echo $sql;
+        //echo $sql;
         if (!$result) return false;
         $QRText ='{"walletaddress":"'.$gatewayWallet.'","uoid":"addMerchant","amount":"'.$comfirmAmount.'"}';
         $QRTextHex="0x".$_functions->strToHex($QRText);
